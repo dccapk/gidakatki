@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GKM – Gıda Katkı Maddesi Analizi</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij4KICA8cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHJ4PSIxMiIgZmlsbD0iIzExMTkxNiIvPgogIDxyZWN0IHg9IjIiIHk9IjIiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcng9IjEwIiBmaWxsPSJub25lIiBzdHJva2U9IiMzZGJhNjAiIHN0cm9rZS13aWR0aD0iMiIvPgogIDx0ZXh0IHg9IjMyIiB5PSIyOCIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE2IiBmb250LXdlaWdodD0iOTAwIiBmaWxsPSIjM2RiYTYwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBsZXR0ZXItc3BhY2luZz0iMC41Ij5HxLFkYTwvdGV4dD4KICA8dGV4dCB4PSIzMiIgeT0iNDYiIGZvbnQtZmFtaWx5PSJBcmlhbCBCbGFjaywgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9IjkwMCIgZmlsbD0iIzNkYmE2MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgbGV0dGVyLXNwYWNpbmc9IjAuNSI+S2F0a8SxPC90ZXh0Pgo8L3N2Zz4=">
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij4KICA8cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHJ4PSIxMiIgZmlsbD0iIzExMTkxNiIvPgogIDxyZWN0IHg9IjIiIHk9IjIiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcng9IjEwIiBmaWxsPSJub25lIiBzdHJva2U9IiMzZGJhNjAiIHN0cm9rZS13aWR0aD0iMiIvPgogIDx0ZXh0IHg9IjMyIiB5PSIyOCIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE2IiBmb250LXdlaWdodD0iOTAwIiBmaWxsPSIjM2RiYTYwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBsZXR0ZXItc3BhY2luZz0iMC41Ij5HxLFkYTwvdGV4dD4KICA8dGV4dCB4PSIzMiIgeT0iNDYiIGZvbnQtZmFtaWx5PSJBcmlhbCBCbGFjaywgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9IjkwMCIgZmlsbD0iIzNkYmE2MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgbGV0dGVyLXNwYWNpbmc9IjAuNSI+S2F0a8SxPC90ZXh0Pgo8L3N2Zz4=">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="GKM Analiz">
+<meta name="theme-color" content="#111916">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Google+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#111916; --surface:#1b2620; --border:#2d4238;
+    --accent:#3dba60; --accent2:#7ecf9a;
+    --warn:#d4922a; --danger:#c94f4f;
+    --muted:#608070; --text:#dff0e6; --text2:#9bbfaa;
+  }
+  body.light {
+    --bg:#f2f7f4; --surface:#ffffff; --border:#b8d8c4;
+    --accent:#2a9e4f; --accent2:#1e7a3c;
+    --warn:#b87010; --danger:#b03030;
+    --muted:#7a9e8a; --text:#172820; --text2:#3a6648;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background:var(--bg); color:var(--text);
+    font-family:'Google Sans',sans-serif;
+    min-height:100vh; padding:20px 16px 60px;
+    transition:background .25s, color .25s;
+  }
+
+  /* TOPBAR */
+  .topbar { display:flex; justify-content:flex-end; margin-bottom:14px; }
+  .tema-btn {
+    display:flex; align-items:center; gap:6px;
+    background:var(--surface); border:2px solid var(--border);
+    border-radius:20px; padding:7px 16px; cursor:pointer;
+    font-family:'Google Sans',sans-serif; font-size:13px;
+    font-weight:600; color:var(--text2); transition:all .2s;
+  }
+  .tema-btn:hover { border-color:var(--accent); color:var(--accent); }
+
+  /* HEADER */
+  .header {
+    text-align:center; padding-bottom:26px;
+    border-bottom:2px solid var(--border); margin-bottom:28px;
+  }
+  .header h1 { font-family:'Amiri',serif; font-size:34px; color:var(--accent); }
+  .header p { font-size:13px; color:var(--muted); margin-top:8px; letter-spacing:1.5px; text-transform:uppercase; }
+
+  /* SEARCH */
+  .search-box { display:flex; flex-direction:column; gap:12px; }
+  .input-row { position:relative; }
+  .input-row input {
+    width:100%; background:var(--surface); border:2px solid var(--border);
+    color:var(--text); font-family:'Google Sans',sans-serif; font-size:17px;
+    padding:16px 16px 16px 50px; border-radius:10px; outline:none;
+    transition:border-color .2s, background .25s;
+  }
+  .input-row input:focus { border-color:var(--accent); }
+  .input-row input::placeholder { color:var(--muted); }
+  .input-row .ico { position:absolute; left:15px; top:50%; transform:translateY(-50%); font-size:20px; }
+
+  .oneri-liste {
+    background:var(--surface); border:2px solid var(--accent);
+    border-top:none; border-radius:0 0 10px 10px;
+    overflow:hidden; display:none;
+  }
+  .oneri-liste.acik { display:block; }
+  .oneri-item {
+    padding:13px 16px 13px 50px; cursor:pointer;
+    font-size:15px; color:var(--text); border-top:1px solid var(--border);
+    transition:background .15s;
+  }
+  .oneri-item:first-child { border-top:none; }
+  .oneri-item:hover { background:rgba(61,186,96,.1); }
+  .oneri-item strong { color:var(--accent); }
+  .oneri-item span { font-size:12px; color:var(--muted); margin-left:8px; }
+  .btn-ara {
+    width:100%; padding:17px; border-radius:10px; border:none;
+    background:var(--accent); color:#fff;
+    font-family:'Google Sans',sans-serif; font-size:16px;
+    font-weight:700; letter-spacing:1px; cursor:pointer;
+    transition:opacity .2s; text-transform:uppercase;
+  }
+  .btn-ara:hover { opacity:.85; }
+
+  /* RESULT */
+  .result { display:none; margin-top:28px; animation:fadeIn .3s ease; }
+  .result.active { display:block; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+  /* MADDE HEADER */
+  .madde-header {
+    background:var(--surface); border:2px solid var(--border);
+    border-radius:12px; padding:20px; margin-bottom:12px;
+    display:flex; align-items:center; gap:14px;
+  }
+  .madde-isim { flex:1; }
+  .madde-isim h2 { font-family:'Amiri',serif; font-size:26px; color:var(--text); }
+  .madde-isim span { font-size:13px; color:var(--muted); margin-top:4px; display:block; }
+  .helal-badge {
+    padding:8px 16px; border-radius:8px; font-size:14px;
+    font-weight:700; letter-spacing:.5px; flex-shrink:0; text-align:center;
+  }
+
+  /* ROZET SATIRI */
+  .rozet-satir { display:flex; gap:10px; margin-bottom:14px; }
+  .saglik-rozet {
+    flex:1; padding:12px 16px; border-radius:10px; border:2px solid;
+    font-size:14px; font-weight:600; text-align:center; letter-spacing:.3px;
+  }
+
+  /* OZET */
+  .ozet-kutu {
+    background:var(--surface); border:2px solid var(--border);
+    border-radius:10px; padding:15px 16px; margin-bottom:14px;
+    font-size:14px; color:var(--text2); line-height:1.75;
+  }
+
+  /* SECTIONS */
+  .section { background:var(--surface); border:2px solid var(--border); border-radius:12px; margin-bottom:10px; overflow:hidden; }
+  .section-head { display:flex; align-items:center; gap:10px; padding:16px; cursor:pointer; user-select:none; }
+  .section-head:hover { background:rgba(61,186,96,.06); }
+  .section-icon { font-size:19px; flex-shrink:0; }
+  .section-title { flex:1; font-size:15px; font-weight:600; color:var(--accent2); }
+  .section-chev { color:var(--muted); font-size:13px; transition:transform .2s; }
+  .section.open .section-chev { transform:rotate(180deg); }
+  .section-body { display:none; padding:4px 16px 18px; border-top:2px solid var(--border); }
+  .section.open .section-body { display:block; }
+  .section-body p { font-size:15px; color:var(--text); line-height:1.8; margin-top:13px; }
+
+  /* BULUNAMADI */
+  .bulunamadi {
+    text-align:center; padding:40px 20px;
+    background:var(--surface); border:2px solid var(--border);
+    border-radius:12px; margin-top:28px;
+  }
+  .bulunamadi .emoji { font-size:40px; margin-bottom:12px; }
+  .bulunamadi h3 { font-size:16px; color:var(--text); margin-bottom:8px; }
+  .bulunamadi p { font-size:14px; color:var(--muted); line-height:1.6; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <button class="tema-btn" id="yukleBtn" onclick="anaEkranaEkle()" style="margin-right:auto; display:none;">📲 Ana Ekrana Ekle</button>
+  <button class="tema-btn" id="temaBtn" onclick="temaDegistir()">☀️ Açık Mod</button>
+</div>
+
+<div class="header">
+  <h1>🌿 GKM Analiz</h1>
+  <p>Gıda Katkı Maddesi Değerlendirmesi</p>
+</div>
+
+<div class="search-box">
+  <div class="input-row" style="border-radius:10px;">
+    <span class="ico">🔍</span>
+    <input type="text" id="girdi" placeholder="E kodu veya madde adı yazın..."
+      oninput="oneriGoster()"
+      onkeydown="if(event.key==='Enter'){oneriKapat();ara();}"
+      autocomplete="off">
+  </div>
+  <div class="oneri-liste" id="oneriListe"></div>
+  <button class="btn-ara" onclick="oneriKapat();ara()">Analiz Et</button>
+</div>
+
+<div class="result" id="result"></div>
+
+<script>
+function temaDegistir() {
+  const isLight = document.body.classList.toggle('light');
+  document.getElementById('temaBtn').textContent = isLight ? '🌙 Koyu Mod' : '☀️ Açık Mod';
+}
+
+const SC = { Helal:"#3dba60", Haram:"#c94f4f", Şüpheli:"#d4922a" };
+
+const DATA = [
+  {e:"E100",ad:"Kurkumin",diger:"Zerdeçal boyası",helal:"Helal",kaynak:"Bitkisel",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur. Çok yüksek dozda mide tahrişi yapabilir.",kacin:"Özel bir grup için kaçınma gerekmez.",neden:"Doğal sarı-turuncu renk vermek için zerdeçal bitkisinden elde edilir.",kullanim:"Hardal, margarin, peynir, hazır çorba ve baharat karışımlarında kullanılır.",kategori:"Renklendirici"},
+  {e:"E101",ad:"Riboflavin (B2 Vitamini)",diger:"Sarı boya",helal:"Helal",kaynak:"Bitkisel veya sentetik",saglik:"Güvenli",zararlar:"Zararsızdır. Vücut için gerekli bir vitamindir.",kacin:"Kaçınması gereken grup yoktur.",neden:"Sarı renk vermek ve besin değeri katmak amacıyla üretilir.",kullanim:"Bebek mamaları, tahıl ürünleri, içecekler ve süt ürünlerinde bulunur.",kategori:"Renklendirici"},
+  {e:"E102",ad:"Tartrazin",diger:"Sarı 5",helal:"Helal",kaynak:"Sentetik",saglik:"Dikkat gerektiriyor",zararlar:"Çocuklarda hiperaktivite ve dikkat eksikliği üzerindeki olumsuz etkisi bilimsel çalışmalarla desteklenmiş; AB bu gerekçeyle etiket uyarısı zorunlu kılmıştır. Aspirin alerjisi olanlarda çapraz reaksiyon yapabilir. Bazı astım hastalarında solunum sorunlarını tetikleyebilir. Ürtiker ve anjiyoödem gibi ciddi alerjik reaksiyonlara neden olabilir.",kacin:"Çocuklar (özellikle DEHB tanısı olanlar), astım hastaları, aspirin alerjisi ve alerji geçmişi olanlar bu maddeyi içeren ürünlerden uzak durmalıdır.",neden:"Gıdalara sarı renk vermek için petrokimyasal türevlerden kimyasal sentezle üretilir.",kullanim:"Gazlı içecekler, şekerleme, hazır tatlılar, cipsler ve bazı ilaçlar.",kategori:"Renklendirici"},
+  {e:"E110",ad:"Sarı FCF / Güneş Sarısı",diger:"Sunset Yellow",helal:"Helal",kaynak:"Sentetik",saglik:"Dikkat gerektiriyor",zararlar:"Alerjik reaksiyon ve hiperaktivite riski taşır. Bazı ülkelerde kısıtlanmıştır.",kacin:"Alerji ve astım hastaları, çocuklar.",neden:"Turuncu-sarı renk vermek amacıyla üretilir.",kullanim:"Meşrubat, reçel, dondurma ve hazır çorbalarda bulunur.",kategori:"Renklendirici"},
+  {e:"E120",ad:"Karmin / Koşinil",diger:"Cochineal, Carmine",helal:"Haram",kaynak:"Böcek (Dactylopius coccus)",saglik:"Alerji riski var",zararlar:"Bazı kişilerde ciddi alerjik reaksiyon yapabilir.",kacin:"Tüm Müslümanlar kaçınmalıdır. Alerji sahipleri de dikkat etmelidir.",neden:"Kırmızı renk elde etmek için koşinil böceğinin kurutulup işlenmesiyle elde edilir.",kullanim:"Meyve suları, şekerlemeler, yoğurt ve dondurma.",kategori:"Renklendirici"},
+  {e:"E122",ad:"Azorübin (Karmoizin)",diger:"Carmoisine",helal:"Helal",kaynak:"Sentetik",saglik:"Dikkat gerektiriyor",zararlar:"Hiperaktivite bağlantısı nedeniyle AB'de çocuk ürünlerinde uyarı etiketi zorunludur.",kacin:"Hiperaktif çocuklar ve alerji sahipleri.",neden:"Kırmızı renk vermek için kimyasal sentezle üretilir.",kullanim:"Jöleler, marmelat ve bazı alkolsüz içecekler.",kategori:"Renklendirici"},
+  {e:"E124",ad:"Ponso 4R",diger:"Cochineal Red A",helal:"Helal",kaynak:"Sentetik",saglik:"Dikkat gerektiriyor",zararlar:"Alerjen etki yapabilir; AB'de uyarı etiketi zorunludur.",kacin:"Alerji sahipleri ve çocuklar.",neden:"Kırmızı renk vermek amacıyla üretilir.",kullanim:"Şarap bazlı içecekler ve bazı tatlılar.",kategori:"Renklendirici"},
+  {e:"E132",ad:"İndigotin",diger:"Indigo Carmine",helal:"Helal",kaynak:"Sentetik",saglik:"Güvenli",zararlar:"Nadir alerjik reaksiyon görülebilir.",kacin:"Alerji sahipleri dikkat etmelidir.",neden:"Mavi-mor renk vermek için üretilir.",kullanim:"Şekerleme, dondurma ve bazı içecekler.",kategori:"Renklendirici"},
+  {e:"E150a",ad:"Düz Karamel",diger:"Karamel rengi I",helal:"Helal",kaynak:"Bitkisel / Şeker",saglik:"Güvenli",zararlar:"Bilinen ciddi bir zararı yoktur.",kacin:"Diyabet hastalarının şeker içeriğine dikkat etmesi önerilir.",neden:"Kahverengi renk vermek için şekerin ısıtılmasıyla elde edilir.",kullanim:"Kola, bira, ekmek ve sos çeşitleri.",kategori:"Renklendirici"},
+  {e:"E150d",ad:"Sülfit Amonyum Karameli",diger:"Karamel IV",helal:"Helal",kaynak:"Sentetik / Şeker",saglik:"Dikkat gerektiriyor",zararlar:"4-MEI adlı bileşik içerebilir; yüksek dozda tartışmalı risk taşır.",kacin:"İhtiyatlı olmak isteyenler az tüketmeli.",neden:"Yoğun kahverengi renk vermek için üretilir.",kullanim:"Kola içecekleri.",kategori:"Renklendirici"},
+  {e:"E160a",ad:"Beta Karoten",diger:"Provitamin A",helal:"Helal",kaynak:"Bitkisel",saglik:"Güvenli",zararlar:"Aşırı tüketimde cilt sarımsı renk alabilir; zararsızdır.",kacin:"Kaçınması gereken grup yoktur.",neden:"Sarı-turuncu renk vermek ve A vitamini kaynağı olarak üretilir.",kullanim:"Margarin, tereyağı, peynir ve meyve suları.",kategori:"Renklendirici"},
+  {e:"E171",ad:"Titanyum Dioksit",diger:"CI 77891",helal:"Helal",kaynak:"Mineral",saglik:"Riskli",zararlar:"Avrupa Gıda Güvenliği Otoritesi (EFSA) 2021 yılında bu maddenin artık gıdalarda güvenli kabul edilemeyeceğine hükmetmiş; AB 2022'de gıdalardaki kullanımını tamamen yasaklamıştır. Nano boyutlu partiküllerin DNA hasarına ve olası genotoksisiteye yol açabileceği değerlendirilmektedir. Bağırsak bariyer işlevini bozabileceğine dair bulgular mevcuttur.",kacin:"AB dışındaki ülkelerde hâlâ bazı ürünlerde bulunabilir. Etiket okunarak kaçınılması önerilir. Özellikle çocuklara yönelik ürünlerde dikkatli olunmalıdır.",neden:"Beyaz renk ve opaklık vermek için mineral bileşiğinden elde edilirdi.",kullanim:"Bazı ülkelerde hâlâ şekerleme, ciklet ve hazır gıdalarda bulunabilir.",kategori:"Renklendirici"},
+  {e:"E200",ad:"Sorbik Asit",diger:"–",helal:"Helal",kaynak:"Sentetik",saglik:"Güvenli",zararlar:"Çok nadir deri tahrişi yapabilir.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Küf ve mayaların üremesini önlemek amacıyla üretilir.",kullanim:"Peynir, ekmek, meyve suyu ve margarin.",kategori:"Koruyucu"},
+  {e:"E202",ad:"Potasyum Sorbat",diger:"–",helal:"Helal",kaynak:"Sentetik",saglik:"Dikkat gerektiriyor",zararlar:"Bazı kişilerde alerjik reaksiyon ve deri tahrişi yapabilir. Hayvan çalışmalarında bağışıklık sistemi ve DNA üzerinde olumsuz etkileri gözlemlenmiştir; uzun vadeli yüksek maruziyetin riskleri tartışılmaktadır.",kacin:"Alerjisi ve deri hassasiyeti olanlar, bağışıklık sistemi zayıf bireyler dikkat etmelidir. İşlenmiş gıdaları fazla tüketen çocuklar için dikkatli olunmalıdır.",neden:"Küf ve maya üremesini engellemek için kimyasal sentezle üretilir.",kullanim:"Şarap, peynir, ekmek, meyve suyu ve hazır salatalar.",kategori:"Koruyucu"},
+  {e:"E210",ad:"Benzoik Asit",diger:"–",helal:"Helal",kaynak:"Sentetik",saglik:"Dikkat gerektiriyor",zararlar:"Yüksek dozda astım ve alerjik reaksiyon tetikleyebilir.",kacin:"Astım hastaları ve alerji sahipleri.",neden:"Bakteri ve küf üremesini önlemek amacıyla üretilir.",kullanim:"Meşrubat, meyve suyu, turşu ve soslar.",kategori:"Koruyucu"},
+  {e:"E211",ad:"Sodyum Benzoat",diger:"–",helal:"Helal",kaynak:"Sentetik",saglik:"Dikkat gerektiriyor",zararlar:"C vitamini (E300) ile birleşince kanserojen benzen oluşturabilir. Çocuklarda hiperaktivite ve davranış bozuklukları ile güçlü şekilde ilişkilendirilmiştir. Astım ataklarını tetikleyebilir. Doğal tüketim sınırının aşılması durumunda ciddi sağlık riski taşır.",kacin:"Çocuklar ve yüksek riskli grupta; astım hastaları, C vitamini takviyesi kullananlar ve dikkat bozukluğu olan bireyler bu maddeyi içeren ürünleri sınırlandırmalıdır.",neden:"Bakteri, küf ve maya üremesini engelleyerek raf ömrünü uzatmak için üretilir.",kullanim:"Kola, meyve suyu, ketçap, hazır soslar ve gazlı içecekler.",kategori:"Koruyucu"},
+  {e:"E220",ad:"Kükürt Dioksit",diger:"SO2",helal:"Helal",kaynak:"Mineral / Sentetik",saglik:"Dikkat gerektiriyor",zararlar:"Astım hastalarında ciddi bronkospazm ve solunum krizi tetikleyebilir. Sülfit grubuna alerjisi olan bireylerde anafilaksi dahil ağır reaksiyonlara yol açabilir. AB mevzuatı gereği etiket zorunluluğu bulunan 14 alerjenden biridir.",kacin:"Astım hastaları ve sülfit alerjisi olanlar kesinlikle kaçınmalıdır. Kuru üzüm, kayısı, şarap gibi ürünleri tüketmeden önce etiket kontrol edilmelidir.",neden:"Oksidasyon ve mikrop üremesini önlemek, rengi korumak için üretilir.",kullanim:"Kuru meyveler, şarap, meyve suyu ve bazı konserveler.",kategori:"Koruyucu"},
+  {e:"E250",ad:"Sodyum Nitrit",diger:"–",helal:"Helal",kaynak:"Sentetik",saglik:"Riskli",zararlar:"Yüksek ısıda (ızgara, kızartma) nitrozamine dönüşür; nitrozaminler IARC tarafından Grup 1 kanserojen (kesin kanserojen) olarak sınıflandırılmıştır. Özellikle kolorektal kanser riskiyle doğrudan ilişkilendirilmiştir. Bebeklerde methemoglobinemi (kan oksijen taşıma bozukluğu) yapabilir. Dünya Sağlık Örgütü işlenmiş etleri Grup 1 kanserojen ilan etmiştir; bu sınıflandırmada nitritler belirleyici rol oynamaktadır.",kacin:"Çocuklar, bebekler, hamileler ve kanser riski taşıyan bireyler işlenmiş et ürünü tüketimini ciddi ölçüde kısıtlamalıdır. Sosis, salam ve sucuk tüketimi mümkün olduğunca azaltılmalıdır.",neden:"Et ürünlerini botulizm başta olmak üzere bakterilere karşı korumak ve pembe rengi sağlamak için kullanılır.",kullanim:"Salam, sucuk, sosis, pastırma ve hazır et ürünleri.",kategori:"Koruyucu"},
+  {e:"E251",ad:"Sodyum Nitrat",diger:"–",helal:"Helal",kaynak:"Mineral / Sentetik",saglik:"Riskli",zararlar:"E250 ile benzer risk taşır. Vücutta nitrite dönüşerek zararlı olabilir.",kacin:"Çocuklar ve hamileler dikkat etmelidir.",neden:"Et ürünlerinde koruyucu ve renk sabitleştirici olarak kullanılır.",kullanim:"İşlenmiş et ürünleri, bazı peynirler ve konserveler.",kategori:"Koruyucu"},
+  {e:"E270",ad:"Laktik Asit",diger:"–",helal:"Şüpheli",kaynak:"Hayvansal veya bitkisel fermentasyon olabilir",saglik:"Güvenli",zararlar:"Sağlık açısından zararlı değildir.",kacin:"Kaynağı bilinmiyorsa Müslümanlar şüpheli saymalıdır.",neden:"Asitlik düzenleyici ve koruyucu olarak fermentasyon yoluyla üretilir.",kullanim:"Turşu, yoğurt, meyve suyu ve bazı unlu mamuller.",kategori:"Asitlik Düzenleyici"},
+  {e:"E300",ad:"Askorbik Asit (C Vitamini)",diger:"–",helal:"Helal",kaynak:"Bitkisel veya sentetik",saglik:"Güvenli",zararlar:"Aşırı dozda mide-bağırsak rahatsızlığı yapabilir.",kacin:"Böbrek taşı geçmişi olanlar yüksek doz takviyeden kaçınmalıdır.",neden:"Antioksidan olarak ürün tazeliğini korumak için kullanılır.",kullanim:"Meyve suları, et ürünleri, hazır çorbalar ve unlu mamuller.",kategori:"Antioksidan"},
+  {e:"E306",ad:"Tokoferol (E Vitamini)",diger:"Karışık tokoferoller",helal:"Şüpheli",kaynak:"Bitkisel veya hayvansal olabilir",saglik:"Güvenli",zararlar:"Yüksek dozda kan sulandırıcı etki yapabilir.",kacin:"Kaynağı doğrulanmalıdır. Kan sulandırıcı kullananlar dikkat etmelidir.",neden:"E vitamini kaynağı ve antioksidan olarak kullanılır.",kullanim:"Bitkisel yağlar, tahıl ürünleri ve bazı hazır gıdalar.",kategori:"Antioksidan"},
+  {e:"E320",ad:"BHA",diger:"Bütilhidroksi Anisol",helal:"Helal",kaynak:"Sentetik",saglik:"Riskli",zararlar:"Olası karsinojen olarak sınıflandırılmıştır. Bazı ülkelerde kısıtlanmıştır.",kacin:"Mümkün olduğunca kaçınmak önerilir.",neden:"Yağlı ürünlerin acımasını önlemek için sentetik olarak üretilir.",kullanim:"Cips, bisküvi, hazır çorba ve yağlar.",kategori:"Antioksidan"},
+  {e:"E321",ad:"BHT",diger:"Bütilhidroksi Toluen",helal:"Helal",kaynak:"Sentetik",saglik:"Riskli",zararlar:"Yüksek dozda toksik etki gösterebilir. Tartışmalı karsinojen riski vardır.",kacin:"Kaçınmak tavsiye edilir, özellikle çocuklar için.",neden:"Oksidasyonu önleyerek ürün raf ömrünü uzatmak için üretilir.",kullanim:"Tahıl gevrekleri, sakız, cips ve hazır gıdalar.",kategori:"Antioksidan"},
+  {e:"E322",ad:"Lesitin",diger:"Lecitin",helal:"Şüpheli",kaynak:"Soya, ayçiçeği veya yumurtadan elde edilebilir",saglik:"Güvenli",zararlar:"Yumurta kaynaklıysa haram olabilir. Soya kaynaklıysa helal sayılır.",kacin:"Kaynağı belirsizse şüpheli kabul edilmeli.",neden:"Emülgatör olarak yağ ve suyun karışmasını sağlamak için kullanılır.",kullanim:"Çikolata, margarin, ekmek ve hazır kekler.",kategori:"Emülgatör"},
+  {e:"E330",ad:"Sitrik Asit",diger:"–",helal:"Helal",kaynak:"Bitkisel fermentasyon",saglik:"Güvenli",zararlar:"Aşırı tüketimde diş minesini aşındırabilir.",kacin:"Mide ülseri olanlar yüksek miktardan kaçınmalıdır.",neden:"Asitlik düzenleyici ve doğal koruyucu olarak narenciye fermentasyonuyla üretilir.",kullanim:"Meşrubat, reçel, şekerleme ve konserveler.",kategori:"Asitlik Düzenleyici"},
+  {e:"E407",ad:"Karragenan",diger:"Carrageenan",helal:"Helal",kaynak:"Kırmızı deniz yosunu",saglik:"Dikkat gerektiriyor",zararlar:"Hayvan çalışmalarında bağırsak iltihabı, ülser ve kolon kanseri riskiyle ilişkilendirilmiştir. İnsan bağırsak hücrelerine zarar verebileceğini gösteren in vitro çalışmalar mevcuttur. Düşük moleküllü (degrade) formu daha zararlı kabul edilmektedir. Bebek mamalarında kullanımı birçok ülkede tartışmalı veya kısıtlıdır.",kacin:"İrritabl bağırsak sendromu, inflamatuar bağırsak hastalığı (Crohn, ülseratif kolit) olanlar ve bebekler için kesinlikle dikkatli olunmalıdır. Mümkünse alternatifleri tercih edilmelidir.",neden:"Kıvam artırıcı ve jelleştirici olarak kırmızı deniz yosunundan elde edilir.",kullanim:"Süt ürünleri, hazır çorbalar, et ürünleri ve bebek mamaları.",kategori:"Kıvamlaştırıcı"},
+  {e:"E412",ad:"Guar Sakızı",diger:"Guar Gum",helal:"Helal",kaynak:"Bitkisel (guar fasulyesi)",saglik:"Dikkat gerektiriyor",zararlar:"Yüksek miktarda tüketimde şiddetli gaz, şişkinlik ve ishal yapabilir. Baklagil ailesinden olduğu için baklagil alerjisi olanlarda reaksiyon riski mevcuttur. İlaç emilimini etkileyebileceğinden ilaç kullanımıyla eş zamanlı tüketilmesi önerilmez.",kacin:"Baklagil alerjisi olanlar, irritabl bağırsak sendromu olanlar ve düzenli ilaç kullananlar dikkat etmelidir.",neden:"Kıvam artırıcı ve stabilizatör olarak guar fasulyesinden elde edilir.",kullanim:"Dondurma, yoğurt, hazır çorba, sos ve unlu mamuller.",kategori:"Kıvamlaştırıcı"},
+  {e:"E415",ad:"Ksantan Gam",diger:"Xanthan Gum",helal:"Helal",kaynak:"Bakteriyel fermentasyon (mısır, buğday veya soya)",saglik:"Dikkat gerektiriyor",zararlar:"Yüksek dozda gaz, şişkinlik ve ishal yapabilir. Mısır, buğday veya soyadan üretilebileceğinden bu alerjenlere hassas bireylerde reaksiyon riski vardır. Yenidoğanlarda bağırsak hasarına (nekrotizan enterokolit) yol açtığına dair raporlar nedeniyle bebek mamalarında kullanımı kısıtlanmıştır.",kacin:"Mısır, buğday veya soya alerjisi olanlar, bebekler ve sindirim hassasiyeti bulunanlar dikkat etmelidir.",neden:"Xanthomonas campestris bakterisiyle fermentasyonla üretilir.",kullanim:"Salata sosları, glütensiz ürünler, dondurma ve hazır çorbalar.",kategori:"Kıvamlaştırıcı"},
+  {e:"E420",ad:"Sorbitol",diger:"–",helal:"Helal",kaynak:"Bitkisel (mısır veya meyve)",saglik:"Dikkat gerektiriyor",zararlar:"Günde 50 gramın üzerinde tüketildiğinde ishale yol açabilir.",kacin:"İrritabl bağırsak sendromu ve fruktoz intoleransı olanlar.",neden:"Şeker ikamesi ve nem tutucu olarak bitkisel kaynaklardan üretilir.",kullanim:"Şekersiz ürünler, diyet gıdalar ve sakız.",kategori:"Tatlandırıcı"},
+  {e:"E422",ad:"Gliserin (Gliserol)",diger:"Glycerol",helal:"Şüpheli",kaynak:"Bitkisel veya hayvansal yağlardan elde edilebilir",saglik:"Güvenli",zararlar:"Yüksek dozda baş ağrısı ve mide bulantısı yapabilir.",kacin:"Kaynağı bilinmiyorsa şüpheli kabul edilmeli.",neden:"Nem tutucu ve tatlandırıcı olarak yağ işleme yan ürününden elde edilir.",kullanim:"Şekerleme, kek ve dondurma.",kategori:"Nem Tutucu"},
+  {e:"E440",ad:"Pektin",diger:"–",helal:"Helal",kaynak:"Bitkisel (elma, narenciye kabuğu)",saglik:"Güvenli",zararlar:"Aşırı miktarda sindirim rahatsızlığı yapabilir.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Jelleştirici ve kıvam artırıcı olarak meyve kabukları işlenerek elde edilir.",kullanim:"Reçel, marmelat, meyve suyu ve şekerlemeler.",kategori:"Kıvamlaştırıcı"},
+  {e:"E450",ad:"Difosfatlar",diger:"Pirofosfat",helal:"Helal",kaynak:"Mineral",saglik:"Dikkat gerektiriyor",zararlar:"Fazla fosfor alımı böbrek hastalarında zararlı olabilir.",kacin:"Böbrek yetmezliği olanlar dikkat etmelidir.",neden:"Kabartıcı, emülgatör ve nem tutucu olarak mineral tuzlarından üretilir.",kullanim:"Hazır çorbalar, işlenmiş peynir ve et ürünleri.",kategori:"Emülgatör"},
+  {e:"E471",ad:"Mono ve Digliseritler",diger:"Yağ Asidi Gliseritleri",helal:"Şüpheli",kaynak:"Bitkisel veya hayvansal yağdan elde edilebilir",saglik:"Güvenli",zararlar:"Sağlık açısından zararlı değildir; ancak trans yağ içerebilir.",kacin:"Kaynağı belirsizse şüpheli kabul edilmeli.",neden:"Emülgatör olarak yağ ve suyun homojen karışmasını sağlamak için kullanılır.",kullanim:"Ekmek, kek, margarin ve dondurma — çok yaygın.",kategori:"Emülgatör"},
+  {e:"E472e",ad:"DATEM",diger:"Diasetil Tartarik Asit Esteri",helal:"Şüpheli",kaynak:"Bitkisel veya hayvansal kaynaklı olabilir",saglik:"Güvenli",zararlar:"Kalp hastalığıyla ilgili bazı çalışmalar mevcuttur.",kacin:"Kaynağı belirsizse şüpheli sayılmalıdır.",neden:"Hamur işlerinde hacim ve yapı kazandırmak için üretilir.",kullanim:"Ekmek, pasta ve hazır hamur ürünleri.",kategori:"Emülgatör"},
+  {e:"E476",ad:"PGPR",diger:"Polirisinoleat",helal:"Helal",kaynak:"Bitkisel (hint yağı)",saglik:"Güvenli",zararlar:"Bilinen ciddi bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Viskoziteyi düşürmek için hint yağından üretilir.",kullanim:"Çikolata ve kakaolu ürünler.",kategori:"Emülgatör"},
+  {e:"E481",ad:"Sodyum Stearoil Laktilat",diger:"SSL",helal:"Şüpheli",kaynak:"Stearik asit hayvansal veya bitkisel olabilir",saglik:"Güvenli",zararlar:"Sağlıklı bireylerde zararlı değildir.",kacin:"Kaynağı bilinmiyorsa şüpheli kabul edilmeli.",neden:"Hamur işlerinde emülgatör ve kıvam sağlayıcı olarak üretilir.",kullanim:"Ekmek, kek ve hazır hamur işleri.",kategori:"Emülgatör"},
+  {e:"E500",ad:"Sodyum Karbonat",diger:"Kabartma Tozu, Soda",helal:"Helal",kaynak:"Mineral",saglik:"Güvenli",zararlar:"Fazla miktarda mide rahatsızlığı yapabilir.",kacin:"Böbrek problemi olanlar yüksek sodyum alımından kaçınmalıdır.",neden:"Kabartıcı ve asitlik düzenleyici olarak mineral kaynaklardan elde edilir.",kullanim:"Unlu mamuller ve kekler.",kategori:"Asitlik Düzenleyici"},
+  {e:"E621",ad:"Monosodyum Glutamat",diger:"MSG, Tuzluk",helal:"Helal",kaynak:"Bakteriyel fermentasyon",saglik:"Dikkat gerektiriyor",zararlar:"Hassas bireylerde baş ağrısı, yüz kızarması, terleme, göğüs sıkışması ve mide bulantısı (MSG sendromu) yapabilir. Yüksek sodyum içerdiğinden kan basıncını yükseltebilir. Bazı hayvan çalışmalarında aşırı dozda nörotoksisite gözlemlenmiştir. Çocuklarda düzenli yüksek tüketimin davranışsal etkilerini araştıran çalışmalar sürmektedir.",kacin:"Migren hastaları, MSG hassasiyeti olanlar, yüksek tansiyon hastaları ve çocukların fazla tüketmemesi önerilir. Yiyecek etiketlerinde MSG, E621, 'tatlandırıcı' veya 'doğal aroma' olarak gizlenmiş olabilir.",neden:"Lezzeti artırmak ve umami tadı vermek için şeker kamışı veya nişastanın fermentasyonuyla üretilir.",kullanim:"Hazır çorbalar, cips, fast food, hazır soslar ve et ürünleri.",kategori:"Lezzet Arttırıcı"},
+  {e:"E631",ad:"Disodyum İnozinat",diger:"–",helal:"Şüpheli",kaynak:"Balık veya et kaynaklı olabilir, sentetik de üretilebilir",saglik:"Dikkat gerektiriyor",zararlar:"Gut hastalığında ürik asit yükseltir. Kaynağı haram olabilir.",kacin:"Gut hastaları, böbrek hastaları ve kaynağı bilinmiyorsa Müslümanlar.",neden:"Lezzet kuvvetlendirici olarak genellikle E621 ile birlikte kullanılır.",kullanim:"Cipsler, hazır çorba ve fast food ürünleri.",kategori:"Lezzet Arttırıcı"},
+  {e:"E635",ad:"Disodyum Ribonükleotit",diger:"–",helal:"Şüpheli",kaynak:"E621 ve E631 karışımıdır",saglik:"Dikkat gerektiriyor",zararlar:"E631 ile aynı riskler geçerlidir.",kacin:"Gut hastaları, böbrek hastaları ve kaynağı belirsizse Müslümanlar.",neden:"Güçlü lezzet artırıcı etki için E621 ve E631 birleştirilerek üretilir.",kullanim:"Cipsler ve hazır atıştırmalıklar.",kategori:"Lezzet Arttırıcı"},
+  {e:"E901",ad:"Arı Mumu / Balmumu",diger:"Beeswax",helal:"Helal",kaynak:"Hayvansal (arı)",saglik:"Güvenli",zararlar:"Yenildiğinde sindirilmez ama zararlı değildir.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Gıdaları parlatmak ve korumak amacıyla arı peteklerinden elde edilir.",kullanim:"Meyve ve sebze kaplaması ve şekerlemeler.",kategori:"Kaplama / Cila"},
+  {e:"E904",ad:"Shellak",diger:"Lac reçinesi",helal:"Haram",kaynak:"Lac böceğinin salgısından elde edilir",saglik:"Güvenli",zararlar:"Sağlık açısından zararlı değildir; ancak kaynağı haramdır.",kacin:"Tüm Müslümanlar kaçınmalıdır.",neden:"Parlatma ve kaplama maddesi olarak böcek salgısının işlenmesiyle elde edilir.",kullanim:"Meyve kaplaması, şekerleme ve ilaç kapsülleri.",kategori:"Kaplama / Cila"},
+  {e:"E920",ad:"L-Sistein",diger:"Cysteine",helal:"Şüpheli",kaynak:"İnsan saçı, hayvan tüyü, domuz kılı veya sentetik olabilir",saglik:"Güvenli",zararlar:"Sağlık açısından zararlı değildir; ancak kaynağı kritiktir.",kacin:"Kaynağı bilinmiyorsa kesinlikle kaçınılmalıdır. Domuz kaynaklıysa haramdır.",neden:"Unun işlenmesini ve hamurun elastikiyetini artırmak için kullanılır.",kullanim:"Ekmek, bisküvi ve hazır hamur işleri.",kategori:"Un İşleme"},
+  {e:"E951",ad:"Aspartam",diger:"NutraSweet, Equal",helal:"Helal",kaynak:"Sentetik",saglik:"Dikkat gerektiriyor",zararlar:"Fenilalanin içerdiğinden PKU (fenilketonüri) hastaları için kesinlikle yasaktır. 2023 yılında Dünya Sağlık Örgütü'nün kanser araştırma kolu IARC, aspartamı 'insanlarda muhtemelen kanserojen' (Grup 2B) olarak sınıflandırmıştır. Bazı çalışmalar bağırsak mikrobiyotasını bozabileceğini ve insülin tepkisini etkileyebileceğini göstermektedir. Migren ve baş ağrısı raporları yaygındır.",kacin:"PKU hastaları kesinlikle kaçınmalıdır. Hamile kadınlar, çocuklar ve sık diyet ürün tüketenlerin bu maddenin günlük maruziyetini sınırlandırması önerilir.",neden:"Çok düşük kalorili tatlandırıcı sağlamak için kimyasal sentezle üretilir.",kullanim:"Diyet içecekler, şekersiz sakız, light ürünler ve bazı ilaçlar.",kategori:"Tatlandırıcı"},
+  {e:"E954",ad:"Sakarin",diger:"Sodium Saccharin",helal:"Helal",kaynak:"Sentetik",saglik:"Güvenli",zararlar:"Eski kanser şüphesi güncel araştırmalarla geçersiz sayılmıştır.",kacin:"Hamilelikte aşırı kullanımdan kaçınmak önerilir.",neden:"Şekersiz ve düşük kalorili tatlandırıcı sağlamak için üretilir.",kullanim:"Diyet içecekler ve bazı ilaçlar.",kategori:"Tatlandırıcı"},
+  {e:"E960",ad:"Steviol Glikozit",diger:"Stevia",helal:"Helal",kaynak:"Bitkisel (stevia bitkisi)",saglik:"Güvenli",zararlar:"Çok nadiren alerjik reaksiyon görülebilir.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Doğal, sıfır kalorili tatlandırıcı sağlamak için stevia bitkisinden elde edilir.",kullanim:"Diyet ürünler ve şekersiz içecekler.",kategori:"Tatlandırıcı"},
+  {e:"E965",ad:"Maltitol",diger:"–",helal:"Helal",kaynak:"Bitkisel (mısır nişastası)",saglik:"Dikkat gerektiriyor",zararlar:"Yüksek dozda ishal ve gaz yapabilir.",kacin:"İrritabl bağırsak sendromu olanlar dikkat etmelidir.",neden:"Düşük kalorili tatlandırıcı sağlamak için üretilir.",kullanim:"Şekersiz çikolata ve diyabetik ürünler.",kategori:"Tatlandırıcı"},
+  // ===== YENİ RENKLENDİRİCİLER =====
+  {e:"E103",ad:"Alkannin",diger:"–",helal:"Helal",kaynak:"Bitkisel",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Kırmızı-mor renk vermek için Alkanna bitkisinden elde edilir.",kullanim:"Bazı yağlar ve kozmetik ürünlerde kullanılır.",kategori:"Renklendirici"},
+  {e:"E104",ad:"Kinolin Sarısı",diger:"Quinoline Yellow",helal:"Helal",kaynak:"Sentetik",saglik:"Dikkat gerektiriyor",zararlar:"AB'de çocuk ürünlerinde uyarı etiketi zorunludur. Hiperaktivite riski.",kacin:"Çocuklar ve alerji sahipleri.",neden:"Sarı-yeşil renk vermek için kimyasal sentezle üretilir.",kullanim:"İçecekler, şekerleme ve bazı ilaçlarda kullanılır.",kategori:"Renklendirici"},
+  {e:"E127",ad:"Eritrosin",diger:"Red 3",helal:"Helal",kaynak:"Sentetik",saglik:"Riskli",zararlar:"Yüksek dozda tiroid fonksiyonunu etkileyebilir. ABD'de kısıtlanmıştır.",kacin:"Tiroid hastalığı olanlar dikkat etmelidir.",neden:"Pembe-kırmızı renk vermek için kimyasal sentezle üretilir.",kullanim:"Meyveli şekerleme, kiraz konserveleri ve bazı ilaçlarda.",kategori:"Renklendirici"},
+  {e:"E129",ad:"Allura Kırmızısı",diger:"Red 40",helal:"Helal",kaynak:"Sentetik",saglik:"Dikkat gerektiriyor",zararlar:"Çocuklarda hiperaktivite ve davranış bozukluklarıyla ilişkilendirilmiş; AB'de bu gerekçeyle etiket uyarısı zorunludur. Bazı çalışmalar bu boyada kanserojen safsızlıklar (benzidine türevleri) bulunduğunu göstermektedir. Migren, ürtiker ve alerjik reaksiyon raporları yaygındır.",kacin:"Çocuklar (özellikle DEHB olanlar), alerji ve migren geçmişi olanlar dikkat etmelidir. Bu boyayı içeren cips, şekerleme ve içecekler kontrol edilmelidir.",neden:"Kırmızı renk vermek için petrokimyasal kaynaklı kimyasal sentezle üretilir.",kullanim:"Gazlı içecekler, şekerleme, dondurma, cips ve çeşitli hazır gıdalar.",kategori:"Renklendirici"},
+  {e:"E131",ad:"Patent Mavisi V",diger:"Patent Blue V",helal:"Helal",kaynak:"Sentetik",saglik:"Dikkat gerektiriyor",zararlar:"Nadir alerjik reaksiyon ve hiperaktivite riski.",kacin:"Alerji sahipleri dikkat etmelidir.",neden:"Mavi renk vermek için kimyasal sentezle üretilir.",kullanim:"Bazı içecekler ve şekerlemelerde kullanılır.",kategori:"Renklendirici"},
+  {e:"E133",ad:"Parlak Mavi FCF",diger:"Blue 1",helal:"Helal",kaynak:"Sentetik",saglik:"Dikkat gerektiriyor",zararlar:"Bazı ülkelerde yasaklanmıştır. Nadir alerjik reaksiyon.",kacin:"Alerji sahipleri dikkat etmelidir.",neden:"Mavi renk vermek için kimyasal sentezle üretilir.",kullanim:"İçecekler, şekerleme ve bazı süt ürünlerinde kullanılır.",kategori:"Renklendirici"},
+  {e:"E140",ad:"Klorofil",diger:"–",helal:"Helal",kaynak:"Bitkisel",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Yeşil renk vermek için bitkilerden elde edilen doğal pigmenttir.",kullanim:"Yeşil gıdalar, likörler ve bazı süt ürünlerinde kullanılır.",kategori:"Renklendirici"},
+  {e:"E141",ad:"Klorofil-Bakır Kompleksi",diger:"–",helal:"Helal",kaynak:"Bitkisel",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Stabil yeşil renk için klorofilin bakır ile işlenmesiyle elde edilir.",kullanim:"Yeşil gıdalar ve içeceklerde kullanılır.",kategori:"Renklendirici"},
+  {e:"E142",ad:"Parlak Yeşil S",diger:"Green S",helal:"Helal",kaynak:"Sentetik",saglik:"Dikkat gerektiriyor",zararlar:"Bazı ülkelerde yasaklanmıştır. Hiperaktivite riski.",kacin:"Çocuklar ve alerji sahipleri.",neden:"Yeşil renk vermek için kimyasal sentezle üretilir.",kullanim:"Mint ürünleri, bazı tatlılar ve içeceklerde kullanılır.",kategori:"Renklendirici"},
+  {e:"E151",ad:"Parlak Siyah PN",diger:"Black PN",helal:"Helal",kaynak:"Sentetik",saglik:"Dikkat gerektiriyor",zararlar:"Bazı kişilerde alerjik reaksiyon. Hiperaktivite riski.",kacin:"Alerji sahipleri ve çocuklar.",neden:"Siyah renk vermek için kimyasal sentezle üretilir.",kullanim:"Meyve ürünleri, şekerlemeler ve bazı içeceklerde kullanılır.",kategori:"Renklendirici"},
+  {e:"E153",ad:"Bitkisel Karbon Siyahı",diger:"Carbon Black",helal:"Helal",kaynak:"Bitkisel",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Siyah renk için bitkisel maddelerin yakılmasıyla elde edilir.",kullanim:"Meyve şekerleme kaplamasında kullanılır.",kategori:"Renklendirici"},
+  {e:"E155",ad:"Kahverengi HT",diger:"Chocolate Brown HT",helal:"Helal",kaynak:"Sentetik",saglik:"Dikkat gerektiriyor",zararlar:"Hiperaktivite riski; AB'de çocuk ürünlerinde uyarı etiketi zorunludur.",kacin:"Çocuklar ve alerji sahipleri.",neden:"Kahverengi renk vermek için kimyasal sentezle üretilir.",kullanim:"Çikolatalı gıdalar ve bazı atıştırmalıklarda kullanılır.",kategori:"Renklendirici"},
+  {e:"E160b",ad:"Annato / Biksin",diger:"Annatto",helal:"Helal",kaynak:"Bitkisel",saglik:"Dikkat gerektiriyor",zararlar:"Nadir alerjik reaksiyon görülebilir.",kacin:"Aspirin alerjisi olanlar dikkat etmelidir.",neden:"Turuncu-sarı renk için Bixa orellana tohumlarından elde edilir.",kullanim:"Peynir, tereyağı, margarin ve bazı atıştırmalıklarda kullanılır.",kategori:"Renklendirici"},
+  {e:"E160c",ad:"Paprika Ekstresi",diger:"Capsanthin",helal:"Helal",kaynak:"Bitkisel",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Turuncu-kırmızı renk için kırmızı biberden elde edilir.",kullanim:"Et ürünleri, atıştırmalıklar ve bazı soslar.",kategori:"Renklendirici"},
+  {e:"E160d",ad:"Likopen",diger:"Lycopene",helal:"Helal",kaynak:"Bitkisel",saglik:"Güvenli",zararlar:"Aşırı tüketimde deri rengi geçici olarak değişebilir.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Kırmızı renk ve antioksidan için domatesin işlenmesiyle elde edilir.",kullanim:"Domates ürünleri, bazı içecekler ve takviyelerde kullanılır.",kategori:"Renklendirici"},
+  {e:"E161b",ad:"Lutein",diger:"–",helal:"Helal",kaynak:"Bitkisel",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur. Göz sağlığına faydalıdır.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Sarı renk ve antioksidan için kadife çiçeğinden elde edilir.",kullanim:"Bazı gıdalar ve besin takviyelerinde kullanılır.",kategori:"Renklendirici"},
+  {e:"E161g",ad:"Kantaksantin",diger:"Canthaxanthin",helal:"Helal",kaynak:"Bitkisel veya sentetik",saglik:"Dikkat gerektiriyor",zararlar:"Yüksek dozda gözde retinopati oluşturabilir.",kacin:"Yüksek doz takviyelerinden kaçınılmalıdır.",neden:"Turuncu-kırmızı renk için karotenoid olarak üretilir.",kullanim:"Somon balığı yemi ve bazı gıdalarda kullanılır.",kategori:"Renklendirici"},
+  {e:"E162",ad:"Pancar Kırmızısı",diger:"Betanin",helal:"Helal",kaynak:"Bitkisel",saglik:"Güvenli",zararlar:"Yüksek miktarda idrar ve dışkıyı kırmızımsı gösterebilir (zararsız).",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Kırmızı-mor renk için şeker pancarından elde edilen doğal boyar maddedir.",kullanim:"Et ürünleri, dondurma, şekerleme ve bazı içeceklerde kullanılır.",kategori:"Renklendirici"},
+  {e:"E163",ad:"Antosiyaninler",diger:"Anthocyanins",helal:"Helal",kaynak:"Bitkisel",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Kırmızı-mor renk için meyveler ve sebzelerden elde edilir.",kullanim:"İçecekler, şekerleme ve süt ürünlerinde kullanılır.",kategori:"Renklendirici"},
+  {e:"E170",ad:"Kalsiyum Karbonat",diger:"Tebeşir",helal:"Helal",kaynak:"Mineral",saglik:"Güvenli",zararlar:"Aşırı dozda kabızlık ve hiperkalsemi yapabilir.",kacin:"Böbrek taşı geçmişi olanlar dikkat etmelidir.",neden:"Beyaz renk vermek ve asitliği düzenlemek için mineral kaynaklardan elde edilir.",kullanim:"Şekerleme, unlu mamuller ve bazı gıda kaplamalarında kullanılır.",kategori:"Renklendirici"},
+  {e:"E172",ad:"Demir Oksitler",diger:"Iron Oxides",helal:"Helal",kaynak:"Mineral",saglik:"Güvenli",zararlar:"Gıda kullanımında bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Sarı, kırmızı, kahverengi ve siyah renk vermek için mineral sentezle üretilir.",kullanim:"Bazı şekerlemelerin kaplanmasında ve ilaç kapsüllerinde kullanılır.",kategori:"Renklendirici"},
+  {e:"E173",ad:"Alüminyum",diger:"–",helal:"Helal",kaynak:"Mineral",saglik:"Dikkat gerektiriyor",zararlar:"Nörotoksik etki potansiyeli taşır. AB'de gıdalarda kullanımı kısıtlıdır.",kacin:"Böbrek hastaları ve bebekler kaçınmalıdır.",neden:"Gümüş rengi kaplama için metalik alüminyumdan üretilir.",kullanim:"Bazı şekerlemelerin dekoratif kaplanmasında kullanılır.",kategori:"Renklendirici"},
+  {e:"E174",ad:"Gümüş",diger:"Silver",helal:"Helal",kaynak:"Mineral",saglik:"Güvenli",zararlar:"Çok yüksek dozda arjiria (deri rengi değişimi) yapabilir.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Gümüş rengi kaplama için metalik gümüşten üretilir.",kullanim:"Bazı dekoratif şekerlemelerde kullanılır.",kategori:"Renklendirici"},
+  {e:"E175",ad:"Altın",diger:"Gold",helal:"Helal",kaynak:"Mineral",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Altın rengi kaplama için metalik altından üretilir.",kullanim:"Lüks şekerleme ve bazı içeceklerde dekoratif amaçlı kullanılır.",kategori:"Renklendirici"},
+  // ===== KORUYUCULAR =====
+  {e:"E212",ad:"Potasyum Benzoat",diger:"–",helal:"Helal",kaynak:"Sentetik",saglik:"Dikkat gerektiriyor",zararlar:"C vitaminiyle reaksiyona girip benzene dönüşebilir.",kacin:"Astım hastaları ve çocuklar.",neden:"Koruyucu olarak benzoik asitten üretilir.",kullanim:"Meşrubat, meyve suları ve bazı hazır gıdalarda kullanılır.",kategori:"Koruyucu"},
+  {e:"E213",ad:"Kalsiyum Benzoat",diger:"–",helal:"Helal",kaynak:"Sentetik",saglik:"Dikkat gerektiriyor",zararlar:"Benzoat grubu risklerini taşır.",kacin:"Astım hastaları ve alerji sahipleri.",neden:"Koruyucu olarak kalsiyum tuzu formunda üretilir.",kullanim:"Bazı gıda ürünlerinde kullanılır.",kategori:"Koruyucu"},
+  {e:"E216",ad:"Propil Paraben",diger:"Propylparaben",helal:"Helal",kaynak:"Sentetik",saglik:"Dikkat gerektiriyor",zararlar:"Endokrin bozucu olarak tartışmalıdır. AB'de gıdalarda kullanımı kısıtlanmıştır.",kacin:"Hamile kadınlar, çocuklar ve bebekler kaçınmalıdır.",neden:"Antimikrobiyal koruyucu olarak kimyasal sentezle üretilir.",kullanim:"Bazı ülkelerde gıdalarda ve kozmetiklerde kullanılır.",kategori:"Koruyucu"},
+  {e:"E218",ad:"Metil Paraben",diger:"Methylparaben",helal:"Helal",kaynak:"Sentetik",saglik:"Dikkat gerektiriyor",zararlar:"Endokrin bozucu olarak tartışmalıdır.",kacin:"Hassas gruplar dikkat etmelidir.",neden:"Antimikrobiyal koruyucu olarak kimyasal sentezle üretilir.",kullanim:"Bazı gıdalar, ilaçlar ve kozmetiklerde kullanılır.",kategori:"Koruyucu"},
+  {e:"E221",ad:"Sodyum Sülfit",diger:"–",helal:"Helal",kaynak:"Mineral / Sentetik",saglik:"Dikkat gerektiriyor",zararlar:"Astım hastalarında solunum sıkıntısı tetikleyebilir.",kacin:"Astım ve sülfit alerjisi olanlar kaçınmalıdır.",neden:"Antioksidan ve koruyucu olarak mineral sentezle üretilir.",kullanim:"Şarap, meyve suları ve bazı et ürünlerinde kullanılır.",kategori:"Koruyucu"},
+  {e:"E223",ad:"Sodyum Metabisülfit",diger:"–",helal:"Helal",kaynak:"Mineral / Sentetik",saglik:"Dikkat gerektiriyor",zararlar:"Astım hastalarında ciddi reaksiyon yapabilir.",kacin:"Astım ve sülfit alerjisi olanlar kesinlikle kaçınmalıdır.",neden:"Güçlü antioksidan ve koruyucu olarak üretilir.",kullanim:"Kuru meyveler, şarap, patates ürünleri ve karides.",kategori:"Koruyucu"},
+  {e:"E224",ad:"Potasyum Metabisülfit",diger:"–",helal:"Helal",kaynak:"Mineral / Sentetik",saglik:"Dikkat gerektiriyor",zararlar:"Sülfit grubu risklerini taşır.",kacin:"Astım ve sülfit alerjisi olanlar.",neden:"Antioksidan koruyucu olarak potasyum tuzu formunda üretilir.",kullanim:"Şarap, meyve suyu ve bazı konservelerde kullanılır.",kategori:"Koruyucu"},
+  {e:"E234",ad:"Nizin",diger:"Nisin",helal:"Helal",kaynak:"Bakteriyel fermentasyon",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Doğal antibiyotik peptid olarak laktobasil bakterilerinden elde edilir.",kullanim:"Peynir, et ürünleri ve bazı konservelerde kullanılır.",kategori:"Koruyucu"},
+  {e:"E235",ad:"Natamisin",diger:"Pimaricin",helal:"Helal",kaynak:"Bakteriyel fermentasyon",saglik:"Güvenli",zararlar:"Yalnızca yüzey kaplamasında kullanılır; iç kısma nüfuz etmez.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Antifungal madde olarak Streptomyces bakterilerinden elde edilir.",kullanim:"Peynir ve sosis yüzey kaplamasında kullanılır.",kategori:"Koruyucu"},
+  {e:"E239",ad:"Heksametilentetramin",diger:"Hexamine",helal:"Helal",kaynak:"Sentetik",saglik:"Riskli",zararlar:"Asit ortamında formaldehit açığa çıkarabilir; kanserojen potansiyeli var.",kacin:"Kaçınmak önerilir.",neden:"Antimikrobiyal koruyucu olarak kimyasal sentezle üretilir.",kullanim:"Bazı peynirlerde kullanılır; AB'de kısıtlıdır.",kategori:"Koruyucu"},
+  {e:"E242",ad:"Dimetil Dikarbonat",diger:"DMDC",helal:"Helal",kaynak:"Sentetik",saglik:"Güvenli",zararlar:"Uygulama sonrası metanol ve CO2'ye dönüşür; eser miktarda kalıntı bırakır.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"İçeceklerde maya ve bakteri öldürmek için üretilir.",kullanim:"Meyve suları, şarap ve bazı içeceklerde kullanılır.",kategori:"Koruyucu"},
+  // ===== ANTİOKSİDANLAR =====
+  {e:"E301",ad:"Sodyum Askorbat",diger:"–",helal:"Helal",kaynak:"Bitkisel veya sentetik",saglik:"Güvenli",zararlar:"Çok yüksek dozda mide rahatsızlığı yapabilir.",kacin:"Böbrek taşı geçmişi olanlar dikkat etmelidir.",neden:"C vitamini sodyum tuzu olarak antioksidan amaçlı üretilir.",kullanim:"Et ürünleri, fırın ürünleri ve bazı içeceklerde kullanılır.",kategori:"Antioksidan"},
+  {e:"E302",ad:"Kalsiyum Askorbat",diger:"–",helal:"Helal",kaynak:"Bitkisel veya sentetik",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"C vitamini kalsiyum tuzu olarak üretilir.",kullanim:"Bazı gıdalarda antioksidan olarak kullanılır.",kategori:"Antioksidan"},
+  {e:"E304",ad:"Askorbil Palmitat",diger:"–",helal:"Şüpheli",kaynak:"Bitkisel veya hayvansal yağ asidinden elde edilebilir",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaynağı belirsizse şüpheli kabul edilmeli.",neden:"Yağda çözünür antioksidan olarak üretilir.",kullanim:"Bitkisel yağlar, fırın ürünleri ve bazı işlenmiş gıdalarda.",kategori:"Antioksidan"},
+  {e:"E307",ad:"Alfa-Tokoferol",diger:"Sentetik E Vitamini",helal:"Helal",kaynak:"Sentetik",saglik:"Güvenli",zararlar:"Yüksek dozda kan sulandırıcı etki yapabilir.",kacin:"Kan sulandırıcı ilaç kullananlar dikkat etmelidir.",neden:"Sentetik E vitamini olarak antioksidan amaçlı üretilir.",kullanim:"Bitkisel yağlar, margarin ve tahıl ürünlerinde kullanılır.",kategori:"Antioksidan"},
+  {e:"E310",ad:"Propil Gallat",diger:"–",helal:"Helal",kaynak:"Sentetik",saglik:"Dikkat gerektiriyor",zararlar:"Bazı kişilerde alerjik reaksiyon. Mide tahrişi yapabilir.",kacin:"Alerji sahipleri ve mide hassasiyeti olanlar.",neden:"Antioksidan olarak gallik asitten kimyasal sentezle üretilir.",kullanim:"Bitkisel yağlar, cips yağları ve sakızda kullanılır.",kategori:"Antioksidan"},
+  {e:"E315",ad:"Eritorbik Asit",diger:"İzoaskorbik Asit",helal:"Helal",kaynak:"Bitkisel veya sentetik",saglik:"Güvenli",zararlar:"C vitamini aktivitesi yoktur; bilinen önemli zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Antioksidan koruyucu olarak C vitamini izomeri şeklinde üretilir.",kullanim:"Et ürünleri, dondurulmuş balık ve bazı konservelerde kullanılır.",kategori:"Antioksidan"},
+  {e:"E316",ad:"Sodyum Eritorbat",diger:"–",helal:"Helal",kaynak:"Bitkisel veya sentetik",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Eritorbik asidin sodyum tuzu olarak antioksidan amaçlı üretilir.",kullanim:"Et ürünleri ve bazı konservelerde kullanılır.",kategori:"Antioksidan"},
+  {e:"E319",ad:"TBHQ",diger:"Tersiyer Bütilhidrokinon",helal:"Helal",kaynak:"Sentetik",saglik:"Riskli",zararlar:"Hayvan çalışmalarında yüksek dozda tümör oluşumunu artırdığı gözlemlenmiştir. İnsan çalışmalarında TBHQ maruziyetinin bağışıklık sistemini zayıflattığını ve alerjik reaksiyonların şiddetini artırdığını gösteren kanıtlar mevcuttur. Japon verem aşısı (BCG) etkinliğini azalttığı öne sürülmektedir. Japonya ve bazı AB ülkelerinde yasaklı veya kısıtlıdır.",kacin:"Çocuklar, bağışıklık sistemi baskılanmış bireyler ve alerji hastaları bu maddeyi içeren ürünlerden mümkün olduğunca uzak durmalıdır. Fast food ve hazır cips tüketimini azaltmak TBHQ maruziyetini düşürür.",neden:"Yağ ve yağlı ürünlerde oksidasyonu önlemek için petrokimyasal sentezle üretilir.",kullanim:"Fast food yağları, cips, kraker ve bazı dondurulmuş gıdalarda.",kategori:"Antioksidan"},
+  {e:"E385",ad:"Kalsiyum Dinatrium EDTA",diger:"–",helal:"Helal",kaynak:"Sentetik",saglik:"Dikkat gerektiriyor",zararlar:"Şelat etkisiyle mineral emilimini azaltabilir.",kacin:"Mineraller açısından yetersiz beslenenler dikkat etmelidir.",neden:"Metal bağlayıcı ve oksidasyonu önleyici olarak üretilir.",kullanim:"Konserveler, sürülebilir peynir ve bazı soslarda kullanılır.",kategori:"Antioksidan"},
+  // ===== ASİTLİK DÜZENLEYİCİLER =====
+  {e:"E325",ad:"Sodyum Laktat",diger:"–",helal:"Şüpheli",kaynak:"Bitkisel veya hayvansal fermentasyon olabilir",saglik:"Güvenli",zararlar:"Sağlık açısından zararlı değildir.",kacin:"Kaynağı belirsizse şüpheli kabul edilmeli.",neden:"Nem tutucu ve antioksidan sinerjist olarak laktik asitten üretilir.",kullanim:"Et ürünleri, fırın ürünleri ve bazı şekerlemelerde kullanılır.",kategori:"Asitlik Düzenleyici"},
+  {e:"E331",ad:"Sodyum Sitrat",diger:"–",helal:"Helal",kaynak:"Bitkisel fermentasyon",saglik:"Güvenli",zararlar:"Çok yüksek miktarda elektrolit dengesini bozabilir.",kacin:"Böbrek yetmezliği olanlar dikkat etmelidir.",neden:"Asitlik düzenleyici ve tampon olarak sitrik asitten üretilir.",kullanim:"İçecekler, peynir, reçel ve bazı hazır gıdalarda yaygın.",kategori:"Asitlik Düzenleyici"},
+  {e:"E332",ad:"Potasyum Sitrat",diger:"–",helal:"Helal",kaynak:"Bitkisel fermentasyon",saglik:"Güvenli",zararlar:"Yüksek dozda ishal yapabilir.",kacin:"Böbrek yetmezliği olanlar dikkat etmelidir.",neden:"Asitlik düzenleyici ve tampon olarak sitrik asitten üretilir.",kullanim:"İçecekler, süt ürünleri ve bazı gıdalarda kullanılır.",kategori:"Asitlik Düzenleyici"},
+  {e:"E334",ad:"Tartarik Asit",diger:"–",helal:"Helal",kaynak:"Bitkisel (üzüm)",saglik:"Güvenli",zararlar:"Aşırı miktarda böbrek taşı riskini artırabilir.",kacin:"Böbrek taşı geçmişi olanlar dikkat etmelidir.",neden:"Asitlik düzenleyici ve antioksidan sinerjist olarak şarap üretimi yan ürününden elde edilir.",kullanim:"Şarap, şekerleme, bazı içecekler ve fırın ürünlerinde.",kategori:"Asitlik Düzenleyici"},
+  {e:"E336",ad:"Potasyum Tartarat",diger:"Tartar Kremi",helal:"Helal",kaynak:"Bitkisel (üzüm)",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Kabartıcı ve asitlik düzenleyici olarak tartarik asitten elde edilir.",kullanim:"Fırın ürünleri, şekerleme ve bazı içeceklerde.",kategori:"Asitlik Düzenleyici"},
+  {e:"E338",ad:"Fosforik Asit",diger:"–",helal:"Helal",kaynak:"Mineral",saglik:"Dikkat gerektiriyor",zararlar:"Düzenli yüksek tüketim kalsiyum emilimini engelleyerek kemik yoğunluğunu düşürür ve osteoporoz riskini artırır. Diş minesini aşındırarak çürüklere zemin hazırlar. Böbrek taşı oluşumunu hızlandırabilir. Vücuttaki kalsiyum-fosfor dengesini bozar; bu denge özellikle büyüme çağındaki çocuklar için kritiktir.",kacin:"Çocuklar, ergenler, hamile kadınlar ve osteoporoz riski taşıyanlar günlük kola tüketimini kısıtlamalıdır. Böbrek hastalarında ciddi risk oluşturabilir.",neden:"Asitlik düzenleyici olarak fosfat minerallerinden üretilir.",kullanim:"Kola başta olmak üzere gazlı içecekler, bazı et ürünleri ve peynirlerde.",kategori:"Asitlik Düzenleyici"},
+  {e:"E339",ad:"Sodyum Fosfat",diger:"–",helal:"Helal",kaynak:"Mineral",saglik:"Dikkat gerektiriyor",zararlar:"Fazla fosfor alımı böbrek hastalarında zararlı olabilir.",kacin:"Böbrek yetmezliği olanlar dikkat etmelidir.",neden:"Asitlik düzenleyici ve emülgatör olarak fosfat minerallerinden üretilir.",kullanim:"İşlenmiş peynir, et ürünleri ve hazır çorbalarda.",kategori:"Asitlik Düzenleyici"},
+  {e:"E341",ad:"Kalsiyum Fosfat",diger:"–",helal:"Helal",kaynak:"Mineral",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Kabartıcı ve kalsiyum takviyesi olarak mineral kaynaklardan üretilir.",kullanim:"Fırın ürünleri, tahıllar ve bazı hazır gıdalarda kullanılır.",kategori:"Asitlik Düzenleyici"},
+  {e:"E350",ad:"Sodyum Malat",diger:"–",helal:"Helal",kaynak:"Bitkisel veya sentetik",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Asitlik düzenleyici olarak malik asitten üretilir.",kullanim:"Bazı gıdalar ve içeceklerde kullanılır.",kategori:"Asitlik Düzenleyici"},
+  {e:"E355",ad:"Adipik Asit",diger:"–",helal:"Helal",kaynak:"Sentetik",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Asitlik düzenleyici ve kabartıcı olarak kimyasal sentezle üretilir.",kullanim:"Hazır pudingler, bazı içecekler ve fırın ürünlerinde.",kategori:"Asitlik Düzenleyici"},
+  {e:"E363",ad:"Süksinik Asit",diger:"–",helal:"Helal",kaynak:"Bitkisel veya sentetik",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Asitlik düzenleyici ve tat verici olarak üretilir.",kullanim:"Bazı içecekler ve hazır gıdalarda kullanılır.",kategori:"Asitlik Düzenleyici"},
+  {e:"E503",ad:"Amonyum Karbonat",diger:"–",helal:"Helal",kaynak:"Sentetik",saglik:"Güvenli",zararlar:"Pişirildiğinde tamamıyla uçar; kalıntı bırakmaz.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Kabartıcı olarak amonyak ve karbondioksitten üretilir.",kullanim:"Bazı geleneksel kurabiye ve fırın ürünlerinde.",kategori:"Asitlik Düzenleyici"},
+  {e:"E508",ad:"Potasyum Klorür",diger:"–",helal:"Helal",kaynak:"Mineral",saglik:"Güvenli",zararlar:"Yüksek dozda böbrek problemleri olanlarda sorun yaratabilir.",kacin:"Böbrek yetmezliği ve hiperkalemi olanlar dikkat etmelidir.",neden:"Tuz ikamesi ve asitlik düzenleyici olarak mineral kaynaklardan elde edilir.",kullanim:"Düşük sodyumlu tuz ürünleri ve bazı hazır gıdalarda.",kategori:"Asitlik Düzenleyici"},
+  {e:"E509",ad:"Kalsiyum Klorür",diger:"–",helal:"Helal",kaynak:"Mineral",saglik:"Güvenli",zararlar:"Yüksek dozda mide tahrişi yapabilir.",kacin:"Böbrek yetmezliği olanlar dikkat etmelidir.",neden:"Sertleştirici ve pıhtılaştırıcı olarak mineral kaynaklardan elde edilir.",kullanim:"Peynir yapımı, meyve konserveleri ve tofu üretiminde.",kategori:"Asitlik Düzenleyici"},
+  {e:"E516",ad:"Kalsiyum Sülfat",diger:"Alçıtaşı",helal:"Helal",kaynak:"Mineral",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Sertleştirici ve pıhtılaştırıcı olarak mineral kaynaklardan elde edilir.",kullanim:"Tofu yapımı, unlu mamuller ve bazı konservelerde.",kategori:"Asitlik Düzenleyici"},
+  {e:"E524",ad:"Sodyum Hidroksit",diger:"Kostik Soda",helal:"Helal",kaynak:"Mineral / Sentetik",saglik:"Güvenli",zararlar:"Gıda kullanımında güvenli miktarda; saf halde aşındırıcıdır.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Asitlik düzenleyici olarak elektrolitik işlemle üretilir.",kullanim:"Türk simit, Alman preçel ve bazı gıdalarda işleme için.",kategori:"Asitlik Düzenleyici"},
+  {e:"E575",ad:"Glukonodeltalakton",diger:"GDL",helal:"Helal",kaynak:"Bitkisel fermentasyon",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Asitlik düzenleyici ve pıhtılaştırıcı olarak glükonik asitten üretilir.",kullanim:"Tofu yapımı, bazı peynirler ve fırın ürünlerinde.",kategori:"Asitlik Düzenleyici"},
+  // ===== EMÜLGATÖRLER =====
+  {e:"E400",ad:"Aljinik Asit",diger:"–",helal:"Helal",kaynak:"Deniz yosunu",saglik:"Güvenli",zararlar:"Aşırı miktarda gaz ve şişkinlik yapabilir.",kacin:"Tiroit ilaçlarıyla etkileşimi olabilir.",neden:"Kıvam artırıcı ve jelleştirici olarak deniz yosunundan elde edilir.",kullanim:"Dondurma, hazır çorbalar ve bazı süt ürünlerinde.",kategori:"Kıvamlaştırıcı"},
+  {e:"E401",ad:"Sodyum Aljinat",diger:"–",helal:"Helal",kaynak:"Deniz yosunu",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Kıvam artırıcı ve stabilizatör olarak aljinik asitten üretilir.",kullanim:"Dondurma, hazır soslar ve bazı gıdalarda.",kategori:"Kıvamlaştırıcı"},
+  {e:"E404",ad:"Kalsiyum Aljinat",diger:"–",helal:"Helal",kaynak:"Deniz yosunu",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Jelleştirici olarak aljinik asitten üretilir.",kullanim:"Yapay zeytin taneleri, bazı et ürünleri ve gıdalarda.",kategori:"Kıvamlaştırıcı"},
+  {e:"E406",ad:"Agar-Agar",diger:"Agar",helal:"Helal",kaynak:"Deniz yosunu",saglik:"Güvenli",zararlar:"Aşırı miktarda gaz ve şişkinlik yapabilir.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Jelleştirici ve kıvam artırıcı olarak kırmızı deniz yosunundan elde edilir.",kullanim:"Jöle, dondurma, reçel ve bazı fırın ürünlerinde.",kategori:"Kıvamlaştırıcı"},
+  {e:"E410",ad:"Keçiboynuzu Tohum Sakızı",diger:"Locust Bean Gum",helal:"Helal",kaynak:"Bitkisel",saglik:"Güvenli",zararlar:"Aşırı miktarda gaz ve şişkinlik yapabilir.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Kıvam artırıcı ve stabilizatör olarak keçiboynuzu tohumlarından elde edilir.",kullanim:"Dondurma, peynir ve bazı fırın ürünlerinde.",kategori:"Kıvamlaştırıcı"},
+  {e:"E413",ad:"Tragakant Sakızı",diger:"Tragacanth",helal:"Helal",kaynak:"Bitkisel (Astragalus)",saglik:"Güvenli",zararlar:"Nadir alerjik reaksiyon görülebilir.",kacin:"Baklagil alerjisi olanlar dikkat etmelidir.",neden:"Kıvam artırıcı ve stabilizatör olarak baklagil cinsinden elde edilir.",kullanim:"Şekerleme, salata sosu ve bazı kozmetiklerde.",kategori:"Kıvamlaştırıcı"},
+  {e:"E414",ad:"Akasya Sakızı",diger:"Gum Arabic",helal:"Helal",kaynak:"Bitkisel (akasya ağacı)",saglik:"Güvenli",zararlar:"Nadir alerjik reaksiyon ve gaz yapabilir.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Emülgatör ve kıvam artırıcı olarak akasya ağacı özünden elde edilir.",kullanim:"Şekerleme, içecekler, sakız ve bazı fırın ürünlerinde.",kategori:"Kıvamlaştırıcı"},
+  {e:"E416",ad:"Karaya Sakızı",diger:"Karaya Gum",helal:"Helal",kaynak:"Bitkisel",saglik:"Güvenli",zararlar:"Nadir alerjik reaksiyon görülebilir.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Kıvam artırıcı ve emülgatör olarak Sterculia bitkisinden elde edilir.",kullanim:"Dondurma, bazı et ürünleri ve hazır çorbalarda.",kategori:"Kıvamlaştırıcı"},
+  {e:"E418",ad:"Gellan Sakızı",diger:"Gellan Gum",helal:"Helal",kaynak:"Bakteriyel fermentasyon",saglik:"Güvenli",zararlar:"Çok yüksek miktarda sindirim sorunları yapabilir.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Jelleştirici ve kıvam artırıcı olarak bakteriyel fermentasyonla üretilir.",kullanim:"İçecekler, reçel ve bazı süt ürünlerinde.",kategori:"Kıvamlaştırıcı"},
+  {e:"E421",ad:"Mannitol",diger:"–",helal:"Helal",kaynak:"Bitkisel veya sentetik",saglik:"Dikkat gerektiriyor",zararlar:"Fazla miktarda ishal ve gaz yapabilir.",kacin:"İrritabl bağırsak sendromu olanlar dikkat etmelidir.",neden:"Şeker alkolu olarak bitkisel kaynaklardan veya hidrojeneyle üretilir.",kullanim:"Şekersiz şekerleme ve bazı tıbbi preparatlarda.",kategori:"Tatlandırıcı"},
+  {e:"E432",ad:"Polisorbat 20",diger:"Tween 20",helal:"Şüpheli",kaynak:"Bitkisel veya hayvansal yağdan elde edilebilir",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaynağı belirsizse şüpheli kabul edilmeli.",neden:"Emülgatör olarak sorbitol ve yağ asidinden üretilir.",kullanim:"Bazı gıdalar ve kozmetik ürünlerde kullanılır.",kategori:"Emülgatör"},
+  {e:"E433",ad:"Polisorbat 80",diger:"Tween 80",helal:"Şüpheli",kaynak:"Bitkisel veya hayvansal yağdan elde edilebilir",saglik:"Dikkat gerektiriyor",zararlar:"Bağırsak florasını bozabileceğine dair araştırmalar mevcuttur.",kacin:"İrritabl bağırsak sendromu olanlar ve kaynağı belirsizse şüpheli.",neden:"Emülgatör ve stabilizatör olarak üretilir.",kullanim:"Dondurma, bazı fırın ürünleri ve bazı ilaçlarda.",kategori:"Emülgatör"},
+  {e:"E435",ad:"Polisorbat 60",diger:"Tween 60",helal:"Şüpheli",kaynak:"Bitkisel veya hayvansal yağdan elde edilebilir",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaynağı belirsizse şüpheli kabul edilmeli.",neden:"Emülgatör ve stabilizatör olarak üretilir.",kullanim:"Fırın ürünleri, dondurma ve bazı soslar.",kategori:"Emülgatör"},
+  {e:"E442",ad:"Amonyum Fosfatitler",diger:"–",helal:"Helal",kaynak:"Bitkisel (kolza yağı)",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Emülgatör olarak kolza yağından üretilir.",kullanim:"Çikolata ve kakao ürünlerinde kullanılır.",kategori:"Emülgatör"},
+  {e:"E460",ad:"Selüloz",diger:"Mikrokristalin Selüloz",helal:"Helal",kaynak:"Bitkisel",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Dolgu maddesi ve topaklanma önleyici olarak bitkisel lif işlenerek üretilir.",kullanim:"Rendelenmiş peynir, bazı tabletler ve işlenmiş gıdalarda.",kategori:"Stabilizatör"},
+  {e:"E461",ad:"Metil Selüloz",diger:"–",helal:"Helal",kaynak:"Bitkisel",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Kıvam artırıcı ve emülgatör olarak selülozdan üretilir.",kullanim:"Soslar, bazı vejetaryen ürünler ve ilaç kapsüllerinde.",kategori:"Kıvamlaştırıcı"},
+  {e:"E464",ad:"Hidroksipropil Metil Selüloz",diger:"HPMC",helal:"Helal",kaynak:"Bitkisel",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Kıvam artırıcı, emülgatör ve kaplama maddesi olarak selülozdan üretilir.",kullanim:"Gıda kaplamaları, vejetaryen kapsüller ve bazı gıdalarda.",kategori:"Kıvamlaştırıcı"},
+  {e:"E466",ad:"Karboksimetil Selüloz",diger:"CMC",helal:"Helal",kaynak:"Bitkisel",saglik:"Dikkat gerektiriyor",zararlar:"Yapılan çalışmalar CMC'nin bağırsak mikrobiyotasını ciddi şekilde bozabileceğini, bağırsak duvarı geçirgenliğini artırabileceğini ve düşük düzeyde kronik inflamasyona zemin hazırlayabileceğini göstermektedir. Bu da Crohn ve metabolik sendrom riskiyle ilişkilendirilmektedir. Günlük hayatta son derece yaygın kullanımı nedeniyle kümülatif maruziyet önemli bir endişe kaynağıdır.",kacin:"İrritabl bağırsak sendromu, Crohn hastalığı veya inflamatuar bağırsak hastalığı olanlar mümkün olduğunca kaçınmalıdır. Genel olarak işlenmiş gıda tüketimini azaltmak bu maddeye maruziyeti düşürür.",neden:"Kıvam artırıcı ve stabilizatör olarak selülozun kimyasal modifikasyonuyla üretilir.",kullanim:"Dondurma, unlu mamuller, hazır soslar ve sürülebilir ürünler.",kategori:"Kıvamlaştırıcı"},
+  {e:"E473",ad:"Sükroz Yağ Asidi Esterleri",diger:"–",helal:"Şüpheli",kaynak:"Bitkisel veya hayvansal yağ asidinden elde edilebilir",saglik:"Güvenli",zararlar:"Yüksek dozda sindirim sorunları yapabilir.",kacin:"Kaynağı belirsizse şüpheli kabul edilmeli.",neden:"Emülgatör olarak şeker ve yağ asidinden üretilir.",kullanim:"Fırın ürünleri, dondurma ve bazı gıdalarda.",kategori:"Emülgatör"},
+  {e:"E475",ad:"Poligliserol Yağ Asidi Esterleri",diger:"–",helal:"Şüpheli",kaynak:"Bitkisel veya hayvansal yağdan elde edilebilir",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaynağı belirsizse şüpheli kabul edilmeli.",neden:"Emülgatör olarak poligliserol ve yağ asidinden üretilir.",kullanim:"Fırın ürünleri, margarin ve bazı gıdalarda.",kategori:"Emülgatör"},
+  {e:"E477",ad:"Propilen Glikol Yağ Asidi Esterleri",diger:"–",helal:"Şüpheli",kaynak:"Bitkisel veya hayvansal yağdan elde edilebilir",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaynağı belirsizse şüpheli kabul edilmeli.",neden:"Emülgatör olarak propilen glikol ve yağ asidinden üretilir.",kullanim:"Fırın ürünleri ve bazı gıdalarda kullanılır.",kategori:"Emülgatör"},
+  {e:"E482",ad:"Kalsiyum Stearoil Laktilat",diger:"CSL",helal:"Şüpheli",kaynak:"Stearik asit hayvansal veya bitkisel olabilir",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaynağı bilinmiyorsa şüpheli kabul edilmeli.",neden:"Emülgatör olarak stearik asit ve laktik asitten üretilir.",kullanim:"Ekmek, kek ve bazı hazır gıdalarda kullanılır.",kategori:"Emülgatör"},
+  // ===== TAT ARTIRICILAR =====
+  {e:"E620",ad:"Glutamik Asit",diger:"–",helal:"Helal",kaynak:"Bitkisel fermentasyon",saglik:"Dikkat gerektiriyor",zararlar:"MSG ile aynı riskler; duyarlı kişilerde baş ağrısı yapabilir.",kacin:"MSG hassasiyeti olanlar dikkat etmelidir.",neden:"Umami tat vermek için fermentasyon veya sentezle üretilir.",kullanim:"Hazır çorbalar, et ürünleri ve bazı hazır gıdalarda.",kategori:"Lezzet Arttırıcı"},
+  {e:"E626",ad:"Guanilik Asit",diger:"–",helal:"Şüpheli",kaynak:"Bitkisel veya hayvansal/balık kaynaklı olabilir",saglik:"Dikkat gerektiriyor",zararlar:"Gut hastalığında ürik asit yükseltir.",kacin:"Gut hastaları ve böbrek hastaları kaçınmalıdır.",neden:"Lezzet artırıcı olarak nükleotit kaynaklardan elde edilir.",kullanim:"Hazır çorba ve bazı atıştırmalıklarda.",kategori:"Lezzet Arttırıcı"},
+  {e:"E627",ad:"Disodyum Guanilat",diger:"–",helal:"Şüpheli",kaynak:"Balık, et veya bitkisel kaynaklı olabilir",saglik:"Dikkat gerektiriyor",zararlar:"Gut hastalığında ürik asit yükseltir.",kacin:"Gut hastaları, böbrek hastaları ve kaynağı belirsizse Müslümanlar.",neden:"Lezzet artırıcı olarak nükleotit kaynaklardan üretilir.",kullanim:"Cipsler, hazır çorba ve bazı atıştırmalıklarda.",kategori:"Lezzet Arttırıcı"},
+  {e:"E630",ad:"İnozinik Asit",diger:"–",helal:"Şüpheli",kaynak:"Hayvansal (et/balık) veya bitkisel olabilir",saglik:"Dikkat gerektiriyor",zararlar:"Gut hastalığında ürik asit yükseltir.",kacin:"Gut hastaları, böbrek hastaları ve kaynağı belirsizse Müslümanlar.",neden:"Lezzet artırıcı olarak nükleotit kaynaklardan elde edilir.",kullanim:"Hazır gıdalar ve atıştırmalıklarda.",kategori:"Lezzet Arttırıcı"},
+  {e:"E636",ad:"Maltol",diger:"–",helal:"Helal",kaynak:"Bitkisel",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Aroma artırıcı olarak doğal kaynaklardan veya sentezle üretilir.",kullanim:"Fırın ürünleri, şekerleme ve bazı içeceklerde.",kategori:"Lezzet Arttırıcı"},
+  {e:"E637",ad:"Etil Maltol",diger:"–",helal:"Helal",kaynak:"Sentetik",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Tatlandırıcı aroma artırıcı olarak maltolden sentezlenir.",kullanim:"Fırın ürünleri ve şekerlemelerde kullanılır.",kategori:"Lezzet Arttırıcı"},
+  // ===== TATLANDIRICILAR =====
+  {e:"E950",ad:"Asesülfam K",diger:"Asesülfam Potasyum",helal:"Helal",kaynak:"Sentetik",saglik:"Dikkat gerektiriyor",zararlar:"Hayvan çalışmalarında yüksek dozda insülin salınımını artırdığı ve bağırsak mikrobiyotasını bozduğu gözlemlenmiştir. Uzun vadeli güvenliği tartışılmaya devam etmektedir. Sıklıkla aspartam ile birlikte kullanıldığından toplam yapay tatlandırıcı yükü açısından dikkat edilmesi önerilir.",kacin:"Hamile kadınlar ve çocuklar bu maddeyi içeren ürünleri sınırlandırmalıdır. Diyabet hastaları insülin etkisi nedeniyle dikkatli olmalıdır.",neden:"Yüksek yoğunluklu tatlandırıcı olarak kimyasal sentezle üretilir.",kullanim:"Diyet içecekler, şekerleme ve bazı fırın ürünlerinde.",kategori:"Tatlandırıcı"},
+  {e:"E952",ad:"Siklomik Asit",diger:"Cyclamate",helal:"Helal",kaynak:"Sentetik",saglik:"Dikkat gerektiriyor",zararlar:"ABD'de yasaklanmıştır; bazı ülkelerde kullanımda. Tartışmalı kanser riski.",kacin:"Hamile ve emziren anneler, böbrek hastaları.",neden:"Düşük kalorili tatlandırıcı olarak kimyasal sentezle üretilir.",kullanim:"Diyet içecekler ve bazı tatlandırıcı tabletlerde bulunur.",kategori:"Tatlandırıcı"},
+  {e:"E953",ad:"İzomalt",diger:"–",helal:"Helal",kaynak:"Bitkisel (şeker pancarı)",saglik:"Güvenli",zararlar:"Yüksek dozda hafif ishal yapabilir.",kacin:"İrritabl bağırsak sendromu olanlar dikkat etmelidir.",neden:"Düşük kalorili şeker ikamesi olarak üretilir.",kullanim:"Şekersiz şekerleme, diyabetik ürünler ve sakızda bulunur.",kategori:"Tatlandırıcı"},
+  {e:"E955",ad:"Sukraloz",diger:"Splenda",helal:"Helal",kaynak:"Sentetik (şekerden türetilir)",saglik:"Güvenli",zararlar:"Genel olarak güvenli; bazı çalışmalar bağırsak florasını etkileyebileceğini öne sürmektedir.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Şekerden kimyasal işlemle üretilen sıfır kalorili tatlandırıcıdır.",kullanim:"Diyet içecekler, şekersiz tatlılar ve besin takviyeleri.",kategori:"Tatlandırıcı"},
+  {e:"E957",ad:"Taumatin",diger:"Thaumatin",helal:"Helal",kaynak:"Bitkisel (Thaumatococcus daniellii meyvesi)",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Doğal tatlandırıcı ve tat artırıcı olarak Afrika bitkisinden elde edilir.",kullanim:"Bazı içecekler, şekerleme ve ilaç kaplamalarında kullanılır.",kategori:"Tatlandırıcı"},
+  {e:"E961",ad:"Neotam",diger:"–",helal:"Helal",kaynak:"Sentetik",saglik:"Güvenli",zararlar:"Aspartam'ın modifiye hali; PKU hastalarında çok az fenilalanin içerir.",kacin:"Aşırı hassas PKU hastalarında ihtiyat önerilir.",neden:"Aspartam'dan üretilen yüksek yoğunluklu tatlandırıcıdır.",kullanim:"İşlenmiş gıdalar, içecekler ve şekerlemelerde kullanılır.",kategori:"Tatlandırıcı"},
+  {e:"E966",ad:"Laktitol",diger:"–",helal:"Helal",kaynak:"Bitkisel (laktoz)",saglik:"Dikkat gerektiriyor",zararlar:"Fazla miktarda ishal ve gaz yapabilir.",kacin:"Laktoz intoleransı olanlar kaçınmalıdır.",neden:"Laktozdan üretilen düşük kalorili şeker alkolüdür.",kullanim:"Şekersiz ürünler, diyabetik gıdalar ve bazı ilaçlarda kullanılır.",kategori:"Tatlandırıcı"},
+  {e:"E967",ad:"Ksilitol",diger:"Xylitol",helal:"Helal",kaynak:"Bitkisel (huş ağacı)",saglik:"Güvenli",zararlar:"Yüksek dozda ishal yapabilir. Köpekler için çok tehlikelidir.",kacin:"İrritabl bağırsak sendromu olanlar dikkat etmelidir.",neden:"Huş ağacı ve bitki liflerinden elde edilen doğal tatlandırıcıdır.",kullanim:"Şekersiz sakız, diş macunu ve diyabetik ürünlerde yaygın.",kategori:"Tatlandırıcı"},
+  {e:"E968",ad:"Eritritol",diger:"–",helal:"Helal",kaynak:"Bitkisel fermentasyon",saglik:"Güvenli",zararlar:"Diğer şeker alkollerine göre daha az sindirim sorunu yapar.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Mısır nişastasının fermentasyonuyla üretilen şeker alkolüdür.",kullanim:"Şekersiz ürünler, diyet içecekler ve pişirme ürünlerinde kullanılır.",kategori:"Tatlandırıcı"},
+  // ===== AMBALAJ GAZLARI =====
+  {e:"E938",ad:"Argon",diger:"–",helal:"Helal",kaynak:"Mineral (hava)",saglik:"Güvenli",zararlar:"İnert gaz; bilinen zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Ürünleri oksidasyon ve bozulmadan korumak için havadan ayrıştırılarak elde edilir.",kullanim:"Ambalajlı gıdalarda atmosfer gazı olarak kullanılır.",kategori:"Ambalaj Gazı"},
+  {e:"E941",ad:"Azot",diger:"Nitrogen",helal:"Helal",kaynak:"Mineral (hava)",saglik:"Güvenli",zararlar:"İnert gaz; bilinen zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Oksidasyonu önlemek için havadan ayrıştırılarak elde edilir.",kullanim:"Cips paketleri, kahve ambalajı ve diğer gıda ambalajlarında.",kategori:"Ambalaj Gazı"},
+  {e:"E942",ad:"Azot Monoksit",diger:"Nitrous Oxide",helal:"Helal",kaynak:"Sentetik",saglik:"Güvenli",zararlar:"Gıda kullanımında güvenli; doğrudan soluma zararlı olabilir.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"İtici gaz ve dondurma işleme gazı olarak üretilir.",kullanim:"Krem şanti spreyleri ve bazı gıda işleme süreçlerinde.",kategori:"Ambalaj Gazı"},
+  {e:"E944",ad:"Propan",diger:"–",helal:"Helal",kaynak:"Mineral (doğal gaz)",saglik:"Güvenli",zararlar:"Gıda kullanımında güvenli.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"İtici gaz olarak doğal gazdan elde edilir.",kullanim:"Bazı spreylerde itici gaz olarak kullanılır.",kategori:"Ambalaj Gazı"},
+  {e:"E948",ad:"Oksijen",diger:"–",helal:"Helal",kaynak:"Mineral (hava)",saglik:"Güvenli",zararlar:"Gıdalarda oksidasyona yol açabilir; kontrollü kullanılır.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Taze et rengi korumak için havadan ayrıştırılarak elde edilir.",kullanim:"Taze et ambalajlarında koruyucu atmosfer gazı olarak.",kategori:"Ambalaj Gazı"},
+  // ===== KAPLAMA MADDELERİ =====
+  {e:"E900",ad:"Dimetil Polisiloksan",diger:"Simethicone",helal:"Helal",kaynak:"Sentetik",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Köpük önleyici ve kaplama maddesi olarak silikon bazlı sentezle üretilir.",kullanim:"Pişirme yağları, bazı içecekler ve şekerlemelerde.",kategori:"Kaplama / Cila"},
+  {e:"E902",ad:"Kandelilla Mumu",diger:"–",helal:"Helal",kaynak:"Bitkisel (Euphorbia cerifera)",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Vegan balmumu alternatifi olarak kaktüs bitkisinden elde edilir.",kullanim:"Şekerleme, meyve kaplama ve kozmetiklerde.",kategori:"Kaplama / Cila"},
+  {e:"E903",ad:"Karnauba Mumu",diger:"–",helal:"Helal",kaynak:"Bitkisel (Copernicia bitkisi)",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Cilalayıcı ve kaplama maddesi olarak Brezilya palmiyesinden elde edilir.",kullanim:"Şekerleme, meyve ve sebze kaplama ve kozmetiklerde.",kategori:"Kaplama / Cila"},
+  {e:"E905",ad:"Mikrokristalin Mum",diger:"–",helal:"Helal",kaynak:"Mineral (petrol)",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Kaplama maddesi olarak petrolün rafine edilmesiyle elde edilir.",kullanim:"Meyve kaplama, bazı şekerlemeler ve peynir kaplamasında.",kategori:"Kaplama / Cila"},
+  {e:"E912",ad:"Montan Asit Esterleri",diger:"–",helal:"Helal",kaynak:"Mineral (linyit kömürü)",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Kaplama ve parlatma maddesi olarak linyitten elde edilir.",kullanim:"Bazı meyve ve sebze kaplamalarında kullanılır.",kategori:"Kaplama / Cila"},
+  {e:"E913",ad:"Lanolin",diger:"–",helal:"Şüpheli",kaynak:"Hayvansal (koyun yünü yağı)",saglik:"Güvenli",zararlar:"Nadir alerjik reaksiyon görülebilir.",kacin:"Yün alerjisi olanlar ve kaynağı şüpheli ise dikkat edilmeli.",neden:"Kaplama maddesi ve nem tutucu olarak koyun yününden elde edilir.",kullanim:"Bazı şekerleme ve meyve kaplamalarında kullanılır.",kategori:"Kaplama / Cila"},
+  // ===== TOPAKLANMA ÖNLEYİCİLER =====
+  {e:"E551",ad:"Silikon Dioksit",diger:"Silica",helal:"Helal",kaynak:"Mineral",saglik:"Güvenli",zararlar:"Nano boyutlu partiküller tartışmalıdır; gıdalarda güvenli kabul edilir.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Topaklanma önleyici ve taşıyıcı olarak silika mineralinden üretilir.",kullanim:"Toz baharatlar, kahve kreması ve bazı takviyelerde.",kategori:"Topaklanma Önleyici"},
+  {e:"E553b",ad:"Talk",diger:"Talc",helal:"Helal",kaynak:"Mineral",saglik:"Dikkat gerektiriyor",zararlar:"İnhalasyonu tehlikeli; gıdalarda yüzey kaplama için sınırlı kullanım.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Topaklanma önleyici ve kaplama maddesi olarak mineral kaynaklardan elde edilir.",kullanim:"Bazı şekerleme kaplamaları ve pirinç işlemede kullanılır.",kategori:"Topaklanma Önleyici"},
+  {e:"E559",ad:"Kaolin",diger:"China Clay",helal:"Helal",kaynak:"Mineral (kil)",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Topaklanma önleyici ve kaplama maddesi olarak kaolin kilinden elde edilir.",kullanim:"Bazı şekerlemeler ve pirinç işlemede kullanılır.",kategori:"Topaklanma Önleyici"},
+  // ===== ENZİMLER =====
+  {e:"E1100",ad:"Amilaz",diger:"Amylase",helal:"Helal",kaynak:"Bitkisel veya mikrobiyel",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Nişastayı şekere parçalamak için elde edilen doğal enzimdir.",kullanim:"Ekmek, bira ve bazı şekerleme üretiminde kullanılır.",kategori:"Enzim"},
+  {e:"E1101",ad:"Proteaz",diger:"Protease",helal:"Şüpheli",kaynak:"Hayvansal, bitkisel veya mikrobiyel olabilir",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaynağı belirsizse şüpheli kabul edilmeli.",neden:"Protein parçalama enzimi olarak çeşitli kaynaklardan elde edilir.",kullanim:"Et gevşetici, peynir yapımı ve bazı gıdalarda.",kategori:"Enzim"},
+  {e:"E1103",ad:"İnvertaz",diger:"Invertase",helal:"Helal",kaynak:"Mikrobiyel (maya)",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Sakarozu glikoz ve fruktoza parçalayan enzim olarak mayadan elde edilir.",kullanim:"Şekerleme ve bazı tatlılarda kullanılır.",kategori:"Enzim"},
+  {e:"E1104",ad:"Lipaz",diger:"Lipase",helal:"Şüpheli",kaynak:"Hayvansal, bitkisel veya mikrobiyel olabilir",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaynağı belirsizse şüpheli kabul edilmeli.",neden:"Yağları parçalayan enzim olarak çeşitli kaynaklardan elde edilir.",kullanim:"Peynir, tereyağı aroması ve bazı gıda işlemlerinde.",kategori:"Enzim"},
+  {e:"E1105",ad:"Lizozim",diger:"Lysozyme",helal:"Şüpheli",kaynak:"Genellikle yumurta beyazından elde edilir",saglik:"Güvenli",zararlar:"Yumurta alerjisi olanlarda ciddi reaksiyon yapabilir.",kacin:"Yumurta alerjisi olanlar kesinlikle kaçınmalıdır.",neden:"Doğal antibakteriyal enzim olarak yumurta beyazından elde edilir.",kullanim:"Peynir ve bazı et ürünlerinde koruyucu olarak kullanılır.",kategori:"Enzim"},
+  // ===== NİŞASTALAR =====
+  {e:"E1404",ad:"Oksitlenmiş Nişasta",diger:"–",helal:"Helal",kaynak:"Bitkisel (mısır, patates, buğday)",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Nişastanın oksidasyonuyla üretilen kıvam artırıcıdır.",kullanim:"Hazır çorbalar, soslar ve fırın ürünlerinde kullanılır.",kategori:"Nişasta"},
+  {e:"E1412",ad:"Difosfat Nişasta",diger:"–",helal:"Helal",kaynak:"Bitkisel",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Çapraz bağlı nişasta olarak üretilir; ısı ve aside dayanıklıdır.",kullanim:"Konserveler, soslar ve dondurulmuş gıdalarda kullanılır.",kategori:"Nişasta"},
+  {e:"E1414",ad:"Asetillenmiş Difosfat Nişasta",diger:"–",helal:"Helal",kaynak:"Bitkisel",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Asetilleme ve çapraz bağlama işlemiyle üretilir.",kullanim:"Dondurulmuş gıdalar ve hazır çorbalarda kullanılır.",kategori:"Nişasta"},
+  {e:"E1420",ad:"Asetillenmiş Nişasta",diger:"–",helal:"Helal",kaynak:"Bitkisel",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Nişastanın asetik asitle işlenmesiyle üretilir.",kullanim:"Fırın ürünleri, soslar ve hazır gıdalarda kullanılır.",kategori:"Nişasta"},
+  {e:"E1422",ad:"Asetillenmiş Adipat Difosfat Nişasta",diger:"–",helal:"Helal",kaynak:"Bitkisel",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Çapraz bağlama ve asetilleme kombinasyonuyla üretilir.",kullanim:"Dondurulmuş gıdalar, konserveler ve soslar.",kategori:"Nişasta"},
+  {e:"E1440",ad:"Hidroksipropil Nişasta",diger:"–",helal:"Helal",kaynak:"Bitkisel",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Nişastanın propilen oksitle işlenmesiyle üretilir.",kullanim:"Dondurulmuş ürünler, soslar ve çorbalarda kullanılır.",kategori:"Nişasta"},
+  {e:"E1442",ad:"Hidroksipropil Difosfat Nişasta",diger:"–",helal:"Helal",kaynak:"Bitkisel",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Çapraz bağlama ve hidroksipropilleme ile üretilir.",kullanim:"Dondurulmuş gıdalar ve hazır ürünlerde kullanılır.",kategori:"Nişasta"},
+  {e:"E1450",ad:"Oktenil Süksinat Nişasta",diger:"–",helal:"Helal",kaynak:"Bitkisel",saglik:"Güvenli",zararlar:"Bilinen önemli bir zararı yoktur.",kacin:"Kaçınması gereken özel grup yoktur.",neden:"Emülsifikasyon amaçlı nişasta modifikasyonuyla üretilir.",kullanim:"Salata sosları, içecekler ve kaplama maddelerinde kullanılır.",kategori:"Nişasta"},
+  // ===== DİĞER =====
+  {e:"E1200",ad:"Polidekstroz",diger:"–",helal:"Helal",kaynak:"Bitkisel (glikoz, sorbitol)",saglik:"Güvenli",zararlar:"Yüksek miktarda gaz ve şişkinlik yapabilir.",kacin:"Sindirim hassasiyeti olanlar dikkat etmelidir.",neden:"Düşük kalorili lif ve dolgu maddesi olarak sentezlenir.",kullanim:"Diyet ürünler, fırın ürünleri ve içeceklerde kullanılır.",kategori:"Dolgu Maddesi"},
+  {e:"E1520",ad:"Propilen Glikol",diger:"Propandiol",helal:"Helal",kaynak:"Sentetik",saglik:"Dikkat gerektiriyor",zararlar:"Yüksek dozda böbrek ve karaciğer üzerinde yük oluşturabilir. AB'de gıdalarda kullanımı kısıtlanmıştır.",kacin:"Böbrek ve karaciğer hastaları dikkat etmelidir.",neden:"Nem tutucu ve taşıyıcı çözücü olarak petrokimyasal sentezle üretilir.",kullanim:"Bazı aromalar, renklendiriciler ve hazır gıdalarda kullanılır.",kategori:"Nem Tutucu"},
+];
+
+
+function oneriGoster() {
+  const q = document.getElementById('girdi').value.trim().toLowerCase();
+  const liste = document.getElementById('oneriListe');
+  if (q.length < 2) { oneriKapat(); return; }
+
+  const eslesler = DATA.filter(d =>
+    d.e.toLowerCase().includes(q) ||
+    d.ad.toLowerCase().includes(q) ||
+    (d.diger && d.diger !== '–' && d.diger.toLowerCase().includes(q))
+  ).slice(0, 6);
+
+  if (eslesler.length === 0) { oneriKapat(); return; }
+
+  liste.innerHTML = eslesler.map(d => {
+    const vurgu = (str) => str.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'), '<strong>$1</strong>');
+    return `<div class="oneri-item" onclick="oneriSec('${d.e}')">
+      ${vurgu(d.ad)} <span>${d.e}</span>
+    </div>`;
+  }).join('');
+
+  liste.classList.add('acik');
+}
+
+function oneriSec(ekodu) {
+  const d = DATA.find(x => x.e === ekodu);
+  if (!d) return;
+  document.getElementById('girdi').value = d.ad;
+  oneriKapat();
+  ara();
+}
+
+function oneriKapat() {
+  const liste = document.getElementById('oneriListe');
+  liste.classList.remove('acik');
+  liste.innerHTML = '';
+}
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.search-box')) oneriKapat();
+});
+
+
+function saglikBilgi(saglik) {
+  const renkMap = {
+    "Güvenli": "#3dba60",
+    "Genel olarak güvenli": "#3dba60",
+    "Riskli": "#c94f4f",
+    "Alerji riski var": "#c94f4f",
+    "Dikkat gerektiriyor": "#d4922a",
+    "Tartışmalı": "#d4922a",
+  };
+  const etiketMap = {
+    "Güvenli": "✅ Sağlıklı",
+    "Genel olarak güvenli": "✅ Sağlıklı",
+    "Riskli": "❌ Sağlık İçin Riskli",
+    "Alerji riski var": "❌ Alerji / Sağlık Riski",
+    "Dikkat gerektiriyor": "⚠️ Dikkat Gerektiriyor",
+    "Tartışmalı": "⚠️ Tartışmalı",
+  };
+  return {
+    renk: renkMap[saglik] || "#d4922a",
+    etiket: etiketMap[saglik] || "⚠️ " + saglik
+  };
+}
+
+function helaliAcikla(d) {
+  if (d.helal === "Helal") return `Bu madde <strong>helal</strong> kabul edilmektedir. Kaynağı ${d.kaynak.toLowerCase()} olup İslami açıdan tüketiminde bir sakınca bulunmamaktadır.`;
+  if (d.helal === "Haram") return `Bu madde <strong>haram</strong> kabul edilmektedir. Kaynağı ${d.kaynak.toLowerCase()} olduğundan Müslümanlar kesinlikle kaçınmalıdır.`;
+  return `Bu madde <strong>şüpheli</strong> kabul edilmektedir. Kaynağı ${d.kaynak.toLowerCase()} olabilir. Kesin helal olduğu kanıtlanmadıkça tüketilmemesi tavsiye edilir.`;
+}
+
+function saglikAcikla(d) {
+  if (d.saglik === "Güvenli" || d.saglik === "Genel olarak güvenli")
+    return "Bu madde genel olarak güvenli kabul edilmektedir. Sağlıklı bireylerin normal tüketimde endişe duymasına gerek yoktur.";
+  if (d.saglik === "Riskli")
+    return "Bu madde sağlık açısından riskli değerlendirilebilir. Mümkün olduğunca az tüketilmesi önerilir.";
+  return "Bu madde dikkatle tüketilmelidir. Bazı kişilerde olumsuz etki gösterebilir.";
+}
+
+function ara() {
+  const q = document.getElementById('girdi').value.trim().toLowerCase();
+  const result = document.getElementById('result');
+  if (!q) return;
+
+  const bulunan = DATA.find(d =>
+    d.e.toLowerCase() === q ||
+    d.ad.toLowerCase().includes(q) ||
+    (d.diger && d.diger !== '–' && d.diger.toLowerCase().includes(q))
+  );
+
+  if (!bulunan) {
+    result.innerHTML = `
+      <div class="bulunamadi">
+        <div class="emoji">🔎</div>
+        <h3>"${document.getElementById('girdi').value}" bulunamadı</h3>
+        <p>Bu madde veri tabanımızda henüz yer almıyor.<br>E kodunu veya tam adını yazmayı deneyin.</p>
+      </div>`;
+    result.classList.add('active');
+    return;
+  }
+
+  const hc = SC[bulunan.helal] || '#d4922a';
+  const sb = saglikBilgi(bulunan.saglik);
+  const helalEmoji = bulunan.helal === "Helal" ? "✅" : bulunan.helal === "Haram" ? "❌" : "⚠️";
+
+  // SVG ikonlar
+  const svgHalal = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7z"/><text x="12" y="15" text-anchor="middle" font-size="6" font-weight="bold" fill="currentColor" stroke="none">HALAL</text></svg>`;
+  const svgSaglik = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/><path d="M12 8c-1.5 1.5-2 3-1 4.5" stroke-width="1.5"/><circle cx="13" cy="10" r="1.2" fill="currentColor" stroke="none"/></svg>`;
+  const svgUretim = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="5" r="2"/><circle cx="19" cy="9" r="2"/><circle cx="14" cy="16" r="2"/><line x1="11" y1="5" x2="17" y2="9"/><line x1="19" y1="11" x2="16" y2="14"/><rect x="2" y="14" width="8" height="6" rx="1"/><line x1="4" y1="14" x2="4" y2="20"/><line x1="7" y1="14" x2="7" y2="20"/></svg>`;
+  const svgKullanim = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15 9 22 9 16.5 14 18.5 21 12 17 5.5 21 7.5 14 2 9 9 9"/></svg>`;
+  const svgZarar = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`;
+  const svgKacin = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>`;
+
+  const bolumler = [
+    {ikon: svgHalal,   baslik:"Helal / Haram Durumu",   icerik: helaliAcikla(bulunan)},
+    {ikon: svgSaglik,  baslik:"Sağlık Değerlendirmesi", icerik: saglikAcikla(bulunan)},
+    {ikon: svgZarar,   baslik:"Zararları ve Riskleri",  icerik: bulunan.zararlar},
+    {ikon: svgKacin,   baslik:"Kimler Kaçınmalı?",      icerik: bulunan.kacin},
+    {ikon: svgUretim,  baslik:"Üretimi ve Kaynağı",     icerik: bulunan.neden},
+    {ikon: svgKullanim,baslik:"Kullanım Alanları",      icerik: bulunan.kullanim},
+  ];
+
+  // Helal rozeti SVG
+  const svgHalalRozet = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7z"/></svg>`;
+  const svgSaglikRozet = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
+
+  let html = `
+    <div class="madde-header">
+      <div class="madde-isim">
+        <h2>${bulunan.ad}</h2>
+        <span>${bulunan.e} · ${bulunan.kategori}</span>
+      </div>
+      <div class="helal-badge" style="background:${hc}22;color:${hc};border:2px solid ${hc}55;display:flex;align-items:center;gap:6px;">${svgHalalRozet} ${bulunan.helal}</div>
+    </div>
+    <div class="rozet-satir">
+      <div class="saglik-rozet" style="background:${sb.renk}18;color:${sb.renk};border-color:${sb.renk}55;display:flex;align-items:center;justify-content:center;gap:8px;">${svgSaglikRozet} ${sb.etiket}</div>
+      <div style="background:var(--surface);color:var(--text2);border:2px solid var(--border);border-radius:10px;padding:6px 13px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;white-space:nowrap;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>${bulunan.kategori}</div>
+    </div>
+    <div class="ozet-kutu"><strong>Kaynak:</strong> ${bulunan.kaynak}${bulunan.diger !== '–' ? ' &nbsp;·&nbsp; <strong>Diğer adı:</strong> ' + bulunan.diger : ''}</div>
+  `;
+
+  bolumler.forEach((b, i) => {
+    html += `
+      <div class="section${i === 0 ? ' open' : ''}" id="sec${i}">
+        <div class="section-head" onclick="tog(${i})">
+          <span class="section-icon" style="display:flex;align-items:center;color:var(--accent2)">${b.ikon}</span>
+          <span class="section-title">${b.baslik}</span>
+          <span class="section-chev">▼</span>
+        </div>
+        <div class="section-body"><p>${b.icerik}</p></div>
+      </div>`;
+  });
+
+  result.innerHTML = html;
+  result.classList.add('active');
+  result.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function tog(i) {
+  document.getElementById('sec' + i).classList.toggle('open');
+}
+
+// Ana ekrana ekle
+let deferredPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('yukleBtn').style.display = 'flex';
+});
+
+window.addEventListener('appinstalled', () => {
+  deferredPrompt = null;
+  document.getElementById('yukleBtn').style.display = 'none';
+});
+
+function anaEkranaEkle() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
+  }
+}
+</script>
+<div style="text-align:center; margin-top:48px; padding-top:24px; border-top:2px solid var(--border);">
+
+  <div style="font-size:13px; color:var(--muted); letter-spacing:.5px;">Powered by <strong style="color:var(--text2);">Davut Can</strong></div>
+  <a href="https://www.instagram.com/davutcankocar" target="_blank" rel="noopener"
+     style="display:inline-flex; align-items:center; justify-content:center; margin-top:12px;
+            width:42px; height:42px; border-radius:12px; border:2px solid var(--border);
+            background:var(--surface); transition:all .2s; text-decoration:none;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C13584" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+      <circle cx="12" cy="12" r="4"/>
+      <circle cx="17.5" cy="6.5" r="1" fill="#C13584" stroke="none"/>
+    </svg>
+  </a>
+</div>
+
+<!-- Android Rehber Modalı -->
+<div id="androidModal" onclick="this.style.display='none'"
+  style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.75);
+         align-items:flex-end; justify-content:center; z-index:999; padding:16px;">
+  <div onclick="event.stopPropagation()"
+    style="background:var(--surface); border:2px solid var(--border); border-radius:16px;
+           padding:24px; width:100%; max-width:420px;">
+    <div style="text-align:center; font-size:28px; margin-bottom:8px;">🤖</div>
+    <div style="font-size:16px; font-weight:700; color:var(--text); text-align:center; margin-bottom:16px;">Android – Ana Ekrana Ekle</div>
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <div style="display:flex; align-items:center; gap:12px; background:var(--bg); border-radius:10px; padding:12px;">
+        <span style="font-size:20px;">1️⃣</span>
+        <span style="font-size:14px; color:var(--text); line-height:1.5;">Chrome'da sağ üst köşedeki <strong>⋮ üç nokta</strong> menüsüne basın</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:12px; background:var(--bg); border-radius:10px; padding:12px;">
+        <span style="font-size:20px;">2️⃣</span>
+        <span style="font-size:14px; color:var(--text); line-height:1.5;"><strong>"Ana ekrana ekle"</strong> veya <strong>"Uygulamayı yükle"</strong> seçeneğine dokunun</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:12px; background:var(--bg); border-radius:10px; padding:12px;">
+        <span style="font-size:20px;">3️⃣</span>
+        <span style="font-size:14px; color:var(--text); line-height:1.5;">Açılan pencerede <strong>"Ekle"</strong> butonuna basın</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:12px; background:var(--bg); border-radius:10px; padding:12px;">
+        <span style="font-size:20px;">✅</span>
+        <span style="font-size:14px; color:var(--accent); font-weight:600;">Uygulama ana ekranınıza eklendi!</span>
+      </div>
+    </div>
+    <button onclick="document.getElementById('androidModal').style.display='none'"
+      style="margin-top:16px; padding:13px; width:100%; border-radius:10px; border:none;
+             background:var(--accent); color:#fff; font-family:'Google Sans',sans-serif;
+             font-size:15px; font-weight:700; cursor:pointer;">Tamam</button>
+  </div>
+</div>
+
+<!-- iOS Rehber Modalı -->
+<div id="iosModal" onclick="this.style.display='none'"
+  style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.75);
+         align-items:flex-end; justify-content:center; z-index:999; padding:16px;">
+  <div onclick="event.stopPropagation()"
+    style="background:var(--surface); border:2px solid var(--border); border-radius:16px;
+           padding:24px; width:100%; max-width:420px;">
+    <div style="text-align:center; font-size:28px; margin-bottom:8px;">🍎</div>
+    <div style="font-size:16px; font-weight:700; color:var(--text); text-align:center; margin-bottom:16px;">iPhone – Ana Ekrana Ekle</div>
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <div style="display:flex; align-items:center; gap:12px; background:var(--bg); border-radius:10px; padding:12px;">
+        <span style="font-size:20px;">1️⃣</span>
+        <span style="font-size:14px; color:var(--text); line-height:1.5;">Bu sayfayı <strong>Safari</strong> ile açın</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:12px; background:var(--bg); border-radius:10px; padding:12px;">
+        <span style="font-size:20px;">2️⃣</span>
+        <span style="font-size:14px; color:var(--text); line-height:1.5;">Alttaki <strong>Paylaş ⬆️</strong> butonuna basın</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:12px; background:var(--bg); border-radius:10px; padding:12px;">
+        <span style="font-size:20px;">3️⃣</span>
+        <span style="font-size:14px; color:var(--text); line-height:1.5;"><strong>"Ana Ekrana Ekle"</strong> seçeneğine dokunun</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:12px; background:var(--bg); border-radius:10px; padding:12px;">
+        <span style="font-size:20px;">✅</span>
+        <span style="font-size:14px; color:var(--accent); font-weight:600;">Uygulama ana ekranınıza eklendi!</span>
+      </div>
+    </div>
+    <button onclick="document.getElementById('iosModal').style.display='none'"
+      style="margin-top:16px; padding:13px; width:100%; border-radius:10px; border:none;
+             background:var(--accent); color:#fff; font-family:'Google Sans',sans-serif;
+             font-size:15px; font-weight:700; cursor:pointer;">Tamam</button>
+  </div>
+</div>
+
+</body>
+</html>
